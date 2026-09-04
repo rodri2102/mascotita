@@ -1,0 +1,11 @@
+'use strict';
+const fs = require('fs');
+let html = fs.readFileSync(__dirname + '/index.src.html', 'utf8');
+const css = fs.readFileSync(__dirname + '/styles.css', 'utf8');
+const core = fs.readFileSync(__dirname + '/core.js', 'utf8');
+const pet = fs.readFileSync(__dirname + '/pet.js', 'utf8');
+html = html.replace('<link rel="stylesheet" href="styles.css">', '<style>' + css + '</style>');
+html = html.replace('<script src="core.js"></script>', '<script>' + core + '</script>');
+html = html.replace('<script src="pet.js"></script>', '<script>' + pet + '</script>');
+fs.writeFileSync(__dirname + '/index.html', html);
+console.log('built mascota/index.html (' + html.length + ' bytes)');
