@@ -24,6 +24,9 @@ Una web autocontenida (un solo `index.html` con todo embebido) — sin servidore
 
 - Ganás **🍪 galletas**: atrapando la pelota, acariciando, en eventos, minijuegos y por la pancita
 - **🛍️ Tienda**: accesorios (corona 👑, gorrito 🎉, sombrero 👒, lentes 🕶️, moño 🎀, gorro 🧶, antena 📡, bigote 👨🏻) — se equipan y quedan guardados
+- **🎨 Salón de belleza**: personalizá el look físico de tu mascota — **8 pelajes** (Clásico, Rosa, Celeste, Menta, Miel, Lavanda, Chocolate, Noche), **5 patrones** (Liso, Manchas, Rayas, Corazones, Estrellas), **3 orejas** (Redondas, Puntiagudas, Caídas), **3 colas** (Pompón, Rizada, Larga) y **cambio de nombre gratis**. Todo se compra una vez y se dibuja en canvas en todas las escenas; cada pelaje cambia el cuerpo, las patitas, las orejas, la cola y hasta los párpados.
+- **😊 Estado de ánimo**: un emoji al lado del nombre muestra cómo está (😄 contenta, 😐 normal, 😢 triste) según el promedio de sus necesidades — se entera al toque si la descuidaste
+- **☀️ Bonus diario**: al volver en un día nuevo te da +5 🍪 automáticamente (además de la racha 🔥)
 - **🐾 Paseo**: salí a lugares increíbles — **La Plaza** 🏛️, **El Bosque** 🌲 y **La Playa** 🏖️ — cada uno con su clima, decorado y sorpresas
 - **💞 Familia (SIMS de animales)**: adoptá hasta **2 hermanos** (Perrito 🐶, Gatito 🐱, Conejín 🐰, Patito 🦆, Dino 🦖) y una **pareja** 💘 para tu mascota. Viven en la escena, pasean, duermen en ronda con ella, se pueden tocar (reaccionan con corazones 🥰), juegan juntos (hermanos) y tienen momentos románticos (la pareja da amor extra). Cada miembro puede despedirse con la ✕ (doble toque de confirmación).
 - **🕹️ Minijuegos**: **Burbujas** 🫧, **Memorión** 🎵, **Topos** 🐹 (¡hay uno dorado que vale ×3!) y **Peces voladores** 🐟 (cuidado con la zapatilla del vecino); todos dan 🍪 y suben el ánimo

@@ -22,6 +22,7 @@
   <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="#ff5a5f" d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
   <span id="np-name">—</span>
   <span id="np-day" class="day"></span>
+  <span id="np-mood" class="mood" title="Estado de ánimo"></span>
 </div>
 
 <!-- Coins -->
@@ -89,6 +90,7 @@
   </div>
   <div class="mini-row">
     <button id="btn-shop" class="minibtn" title="Tienda de accesorios">🛍️ Tienda</button>
+    <button id="btn-salon" class="minibtn" title="Personalizá el look de tu mascota">🎨 Salón</button>
     <button id="btn-paseo" class="minibtn" title="Ir a pasear">🐾 Paseo</button>
     <button id="btn-games" class="minibtn" title="Minijuegos">🕹️ Juegos</button>
     <button id="btn-logros" class="minibtn" title="Logros">🏆 Logros</button>
@@ -136,6 +138,29 @@
     </div>
     <div id="shop-list"></div>
     <small class="tip">Ganá 🍪 atrapando la pelota, acariciando cuando está llena de amor y con sus momentos especiales. La corona se gana, no se pide.</small>
+  </div>
+</div>
+
+<!-- Salón de belleza -->
+<div id="salon" class="overlay">
+  <div class="panel">
+    <div class="shop-head">
+      <h2>🎨 Salón de belleza</h2>
+      <div class="shop-coins">🍪 <b id="salon-balance">0</b></div>
+      <button data-close="salon" class="x" title="Cerrar">✕</button>
+    </div>
+    <div class="salon-sec"><div class="sec-title">Pelaje</div><div id="salon-fur" class="salon-grid"></div></div>
+    <div class="salon-sec"><div class="sec-title">Patrón</div><div id="salon-pattern" class="salon-grid"></div></div>
+    <div class="salon-sec"><div class="sec-title">Orejas</div><div id="salon-ears" class="salon-grid"></div></div>
+    <div class="salon-sec"><div class="sec-title">Cola</div><div id="salon-tail" class="salon-grid"></div></div>
+    <div class="salon-sec">
+      <div class="sec-title">Nombre</div>
+      <div class="rename-row">
+        <input id="salon-name" maxlength="14" autocomplete="off" placeholder="Nuevo nombre…">
+        <button id="btn-rename" class="btn-buy" title="Cambiar nombre (gratis)">Guardar</button>
+      </div>
+    </div>
+    <small class="tip">Cada pelaje, patrón, oreja y cola se compra una vez y queda puesto. El look viaja con tu mascota a todas las escenas.</small>
   </div>
 </div>
 
