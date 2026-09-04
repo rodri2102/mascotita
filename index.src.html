@@ -72,10 +72,20 @@
   </div>
   <div class="mini-row">
     <button id="btn-shop" class="minibtn" title="Tienda de accesorios">🛍️ Tienda</button>
+    <button id="btn-paseo" class="minibtn" title="Ir a pasear">🐾 Paseo</button>
+    <button id="btn-games" class="minibtn" title="Minijuegos">🕹️ Juegos</button>
+    <button id="btn-logros" class="minibtn" title="Logros">🏆 Logros</button>
+    <button id="btn-share" class="minibtn" title="Compartir Mascotita con amigos">📤 Compartir</button>
     <button data-scene="room" class="scenebtn on" title="Sala">🏠 Sala</button>
     <button data-scene="garden" class="scenebtn" title="Jardín">🌳 Jardín</button>
   </div>
 </div>
+
+<!-- barra de minijuego activo -->
+<div id="gamebar" class="hidden"></div>
+
+<!-- flash de selfie -->
+<div id="flash"></div>
 
 <!-- Intro -->
 <div id="intro">
@@ -104,10 +114,70 @@
     <div class="shop-head">
       <h2>Tienda</h2>
       <div class="shop-coins">🍪 <b id="shop-balance">0</b></div>
-      <button id="btn-shop-close" class="x" title="Cerrar">✕</button>
+      <button data-close="shop" class="x" title="Cerrar">✕</button>
     </div>
     <div id="shop-list"></div>
     <small class="tip">Ganá 🍪 atrapando la pelota, acariciando cuando está llena de amor y con sus momentos especiales. La corona se gana, no se pide.</small>
+  </div>
+</div>
+
+<!-- Paseo -->
+<div id="paseo" class="overlay">
+  <div class="panel">
+    <div class="shop-head">
+      <h2>🐾 Ir a pasear</h2>
+      <button data-close="paseo" class="x" title="Cerrar">✕</button>
+    </div>
+    <div id="paseo-list">
+      <button class="place-card" data-place="plaza"><span class="pc-ic">🏛️</span><span class="pc-tx"><b>La Plaza</b><small>Fuente, palomas y cotilleo de barrio. Las visitas llegan solas.</small></span><span class="pc-go">Ir ➜</span></button>
+      <button class="place-card" data-place="bosque"><span class="pc-ic">🌲</span><span class="pc-tx"><b>El Bosque</b><small>Hongos, luciérnagas y un búho que lo sabe todo.</small></span><span class="pc-go">Ir ➜</span></button>
+      <button class="place-card" data-place="playa"><span class="pc-ic">🏖️</span><span class="pc-tx"><b>La Playa</b><small>Arena, olas y un cangrejo con actitud.</small></span><span class="pc-go">Ir ➜</span></button>
+    </div>
+    <small class="tip">Para volver a casa usá los botones 🏠 Sala o 🌳 Jardín.</small>
+  </div>
+</div>
+
+<!-- Juegos -->
+<div id="juegos" class="overlay">
+  <div class="panel">
+    <div class="shop-head">
+      <h2>🕹️ Minijuegos</h2>
+      <button data-close="juegos" class="x" title="Cerrar">✕</button>
+    </div>
+    <button class="place-card" data-game="burbujas"><span class="pc-ic">🫧</span><span class="pc-tx"><b>Burbujas</b><small>Explotá burbujas antes de que escapen. 20 segundos de caos zen.</small></span><span class="pc-go">Jugar ➜</span></button>
+    <button class="place-card" data-game="memo"><span class="pc-ic">🎵</span><span class="pc-tx"><b>Memorión</b><small>Repetí la secuencia de notas que tu mascota te marca.</small></span><span class="pc-go">Jugar ➜</span></button>
+    <small class="tip">Cada partida suma 🍪 y sube el ánimo de tu mascota.</small>
+  </div>
+</div>
+
+<!-- Logros -->
+<div id="logros" class="overlay">
+  <div class="panel">
+    <div class="shop-head">
+      <h2>🏆 Logros</h2>
+      <div class="shop-coins" id="logros-count">0/10</div>
+      <button data-close="logros" class="x" title="Cerrar">✕</button>
+    </div>
+    <div id="logros-list"></div>
+    <small class="tip">Cada logro nuevo da 🍪. ¡A coleccionarlos!</small>
+  </div>
+</div>
+
+<!-- Memorión -->
+<div id="memo" class="overlay">
+  <div class="panel memo-panel">
+    <div class="shop-head">
+      <h2>🎵 Memorión</h2>
+      <span id="memo-round"></span>
+      <button data-close="memo" class="x" title="Salir">✕</button>
+    </div>
+    <p id="memo-status"></p>
+    <div class="pads">
+      <button class="pad" aria-label="nota 1"></button>
+      <button class="pad" aria-label="nota 2"></button>
+      <button class="pad" aria-label="nota 3"></button>
+      <button class="pad" aria-label="nota 4"></button>
+    </div>
   </div>
 </div>
 

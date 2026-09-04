@@ -20,13 +20,18 @@ Una web autocontenida (un solo `index.html` con todo embebido) — sin servidore
 
 ## Economía y progresión
 
-- Ganás **🍪 galletas**: atrapando la pelota, acariciando, en eventos especiales y por la pancita
-- **🛍️ Tienda**: comprale accesorios a tu mascota (corona 👑, gorrito de fiesta 🎉, sombrero 👒, lentes 🕶️, moño 🎀) — lo que comprás se equipa y se dibuja sobre ella, y queda guardado
-- **Escenas**: tu mascota vive en la **Sala** 🏠 y sale al **Jardín** 🌳 (de día y de noche: sol, luna, estrellas, nubes)
+- Ganás **🍪 galletas**: atrapando la pelota, acariciando, en eventos, minijuegos y por la pancita
+- **🛍️ Tienda**: accesorios (corona 👑, gorrito 🎉, sombrero 👒, lentes 🕶️, moño 🎀, gorro 🧶, antena 📡, bigote 👨🏻) — se equipan y quedan guardados
+- **🐾 Paseo**: salí a lugares increíbles — **La Plaza** 🏛️, **El Bosque** 🌲 y **La Playa** 🏖️ — cada uno con su clima, decorado y sorpresas
+- **🕹️ Minijuegos**: **Burbujas** 🫧 (explotá burbujas contrarreloj) y **Memorión** 🎵 (repetí la secuencia de notas); ambos dan 🍪 y suben el ánimo
+- **🐱 Amigos**: Michi la gata y Pío el pájaro vienen a jugar de visita (en la Plaza llegan más seguido)
+- **🏆 Logros**: 10 logros con recompensas (atrapadas, caricias, visitas, rachas, exploración…)
+- **Crecimiento**: tu mascota es bebé 🍼, joven ✨ y grande 🌟 con los días, y volver cada día suma racha 🔥
+- **Escenas**: **Sala** 🏠 y **Jardín** 🌳, de día y de noche (sol, luna, estrellas, nubes)
 
 ## Cosas que pueden pasar
 
-Zoomies, estornudos con arcoíris, regalos (medias, hojas), juicios a tu historial, bailes aprendidos de tutoriales, siestas a mitad de salto… y mucho más.
+Zoomies, estornudos con arcoíris, regalos (medias, hojas), juicios a tu historial, bailes aprendidos de tutoriales, siestas a mitad de salto, meterse en una caja 📦, perseguirse la cola, escribirle a tu mamá por tu cuenta y selfies que nunca vas a ver… y mucho más.
 
 ## Sonido y arte
 
