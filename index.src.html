@@ -24,6 +24,9 @@
   <span id="np-day" class="day"></span>
 </div>
 
+<!-- Coins -->
+<div id="coin-chip">🍪 10</div>
+
 <!-- Mute -->
 <button id="btn-mute" class="pill-btn" title="Sonido">
   <svg id="ico-on" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path fill="currentColor" d="M3 9v6h4l5 5V4L7 9H3zm13.5 3A4.5 4.5 0 0 0 14 8v8a4.5 4.5 0 0 0 2.5-4z"/></svg>
@@ -67,6 +70,11 @@
       <span id="sleep-label">Dormir</span>
     </button>
   </div>
+  <div class="mini-row">
+    <button id="btn-shop" class="minibtn" title="Tienda de accesorios">🛍️ Tienda</button>
+    <button data-scene="room" class="scenebtn on" title="Sala">🏠 Sala</button>
+    <button data-scene="garden" class="scenebtn" title="Jardín">🌳 Jardín</button>
+  </div>
 </div>
 
 <!-- Intro -->
@@ -86,10 +94,24 @@
     <button id="btn-adopt" class="primary">Adoptar
       <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
     </button>
-    <small class="tip">Tocá a tu mascota para darle cariño · arrastrala para lanzarla · todo lo demás se aprende solo</small>
+    <small class="tip">Tocá a tu mascota para darle cariño · arrastrala para lanzarla · atrapá la pelota y viví momentos para ganar 🍪</small>
   </div>
 </div>
 
+<!-- Shop -->
+<div id="shop" class="overlay">
+  <div class="panel">
+    <div class="shop-head">
+      <h2>Tienda</h2>
+      <div class="shop-coins">🍪 <b id="shop-balance">0</b></div>
+      <button id="btn-shop-close" class="x" title="Cerrar">✕</button>
+    </div>
+    <div id="shop-list"></div>
+    <small class="tip">Ganá 🍪 atrapando la pelota, acariciando cuando está llena de amor y con sus momentos especiales. La corona se gana, no se pide.</small>
+  </div>
+</div>
+
+<script src="sfx.js"></script>
 <script src="core.js"></script>
 <script src="pet.js"></script>
 </body>

@@ -15,6 +15,26 @@ const bowl = { active: false, t: 0, x: 0, y: 0 };
 const gift = { active: false, t: 0, x: 0, y: 0, kind: 'sock' };
 const bubbles = [];
 let day = 1;
+let idleT = 6;          // segundos idle antes de animarse a pasear
+let lastPetReward = 0;
+
+// economía y progresión
+let coins = 10;                       // 🍪 galletas
+let ownedItems = [];                  // accesorios comprados
+const outfit = { head: null, face: null };  // equipados
+let gameScene = 'room';               // 'room' | 'garden'
+const shopOpen = { v: false };
+
+// ritmos de decaimiento por segundo (sesión larga, sin matar a la mascota)
+const RATES = { food: 0.085, energy: 0.055, fun: 0.065, love: 0.055 };
+
+const ITEMS = [
+  { id: 'party',   slot: 'head', name: 'Gorrito de fiesta', price: 15, emoji: '🎉' },
+  { id: 'crown',   slot: 'head', name: 'Corona real',       price: 40, emoji: '👑' },
+  { id: 'sombrero', slot: 'head', name: 'Sombrero',         price: 50, emoji: '👒' },
+  { id: 'lentes',  slot: 'face', name: 'Lentes de sol',     price: 25, emoji: '🕶️' },
+  { id: 'mono',    slot: 'face', name: 'Moño',              price: 12, emoji: '🎀' },
+];
 
 /* ================= name suggestions ================= */
 const NAMES = ['Ñoqui', 'Pulguito', 'Waffle', 'Churro', 'Panceta', 'Mochi', 'Tortellini', 'Lunita', 'Bombón', 'Gordis', 'Pelusa', 'Croqueta', 'Gnocchi', 'Tito', 'Milanesa', 'Copito'];
@@ -85,19 +105,203 @@ function dustPuff(x, y, n) {
 }
 function squash(sx, sy) { pet.sx = sx; pet.sy = sy; }
 
+/* ================= economía / accesorios / escenas ================= */
+function refreshCoinChip() {
+  const el = document.getElementById('coin-chip');
+  if (el) el.textContent = '🍪 ' + coins;
+  const bal = document.getElementById('shop-balance');
+  if (bal) bal.textContent = coins;
+}
+function addCoin(n, x, y) {
+  coins += n;
+  refreshCoinChip();
+  const el = document.getElementById('coin-chip');
+  if (el && n > 0) { el.classList.remove('pop'); void el.offsetWidth; el.classList.add('pop'); }
+  if (n > 0 && x != null && y != null) {
+    spawn({ type: 'text', txt: '+' + n, x: x + rand(-10, 10), y: y, vx: rand(-10, 10), vy: -55, size: 15, max: 1.1, color: '#c98a2d' });
+  }
+  AudioSys.coin();
+}
+
+// ---- dibujo de accesorios (coordenadas locales de la mascota) ----
+function drawHatItem(id) {
+  ctx.save();
+  ctx.translate(0, -R * 0.8);
+  if (id === 'party') {
+    ctx.fillStyle = '#ffd166'; ctx.strokeStyle = '#e6b04a'; ctx.lineWidth = 3;
+    ctx.beginPath();
+    ctx.moveTo(-R * 0.34, R * 0.06); ctx.lineTo(R * 0.34, R * 0.06); ctx.lineTo(0, -R * 0.72);
+    ctx.closePath(); ctx.fill(); ctx.stroke();
+    ctx.fillStyle = '#ff8fb1';
+    ctx.beginPath(); ctx.arc(-R * 0.13, R * 0.12, R * 0.06, 0, TAU); ctx.fill();
+    ctx.beginPath(); ctx.arc(R * 0.15, R * 0.18, R * 0.05, 0, TAU); ctx.fill();
+    ctx.fillStyle = '#ff6f91';
+    rr(-R * 0.38, -R * 0.02, R * 0.76, R * 0.18, 5); ctx.fill();
+    ctx.fillStyle = '#fff';
+    ctx.beginPath(); ctx.arc(0, -R * 0.8, R * 0.09, 0, TAU); ctx.fill();
+  } else if (id === 'crown') {
+    ctx.fillStyle = '#ffd166'; ctx.strokeStyle = '#d9a13c'; ctx.lineWidth = 3;
+    rr(-R * 0.34, -R * 0.12, R * 0.68, R * 0.24, 5); ctx.fill(); ctx.stroke();
+    for (let i = 0; i < 5; i++) {
+      const x = -R * 0.32 + i * R * 0.16;
+      ctx.beginPath();
+      ctx.moveTo(x, -R * 0.12);
+      ctx.lineTo(x + R * 0.16, -R * 0.12);
+      ctx.lineTo(x + R * 0.08, -R * (i % 2 ? 0.4 : 0.52));
+      ctx.closePath(); ctx.fill(); ctx.stroke();
+    }
+    ctx.fillStyle = '#ff6f91';
+    ctx.beginPath(); ctx.arc(0, 0, R * 0.05, 0, TAU); ctx.fill();
+    ctx.beginPath(); ctx.arc(-R * 0.22, 0, R * 0.05, 0, TAU); ctx.fill();
+    ctx.beginPath(); ctx.arc(R * 0.22, 0, R * 0.05, 0, TAU); ctx.fill();
+  } else if (id === 'sombrero') {
+    ctx.fillStyle = '#ecc786';
+    ctx.beginPath(); ctx.ellipse(0, R * 0.05, R * 0.78, R * 0.17, 0, 0, TAU); ctx.fill();
+    ctx.beginPath(); ctx.arc(0, R * 0.1, R * 0.3, Math.PI, 0); ctx.closePath(); ctx.fill();
+    ctx.fillStyle = '#6fd3a8';
+    ctx.fillRect(-R * 0.3, -R * 0.12, R * 0.6, R * 0.16);
+    ctx.fillStyle = 'rgba(255,255,255,.5)';
+    ctx.beginPath(); ctx.arc(-R * 0.1, -R * 0.3, R * 0.03, 0, TAU); ctx.fill();
+    ctx.beginPath(); ctx.arc(R * 0.12, -R * 0.26, R * 0.025, 0, TAU); ctx.fill();
+  }
+  ctx.restore();
+}
+function drawFaceItem(id) {
+  ctx.save();
+  if (id === 'lentes') {
+    ctx.fillStyle = 'rgba(25,20,40,.22)'; ctx.strokeStyle = '#3a2416'; ctx.lineWidth = 4.5;
+    for (const s of [-1, 1]) {
+      ctx.beginPath(); ctx.arc(s * R * 0.36, -R * 0.14, R * 0.26, 0, TAU); ctx.fill(); ctx.stroke();
+    }
+    ctx.beginPath(); ctx.moveTo(-R * 0.11, -R * 0.16); ctx.lineTo(R * 0.11, -R * 0.16); ctx.stroke();
+    ctx.lineWidth = 4;
+    ctx.beginPath(); ctx.moveTo(-R * 0.62, -R * 0.2); ctx.lineTo(-R * 0.62, -R * 0.1); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(R * 0.62, -R * 0.2); ctx.lineTo(R * 0.62, -R * 0.1); ctx.stroke();
+  } else if (id === 'mono') {
+    ctx.translate(R * 0.6, -R * 0.58);
+    ctx.rotate(0.35);
+    ctx.fillStyle = '#ff5f7a'; ctx.strokeStyle = '#d84662'; ctx.lineWidth = 2.5;
+    ctx.save();
+    ctx.rotate(-0.45); ctx.beginPath(); ctx.ellipse(-R * 0.16, 0, R * 0.14, R * 0.2, 0, 0, TAU); ctx.fill(); ctx.stroke();
+    ctx.restore();
+    ctx.save();
+    ctx.rotate(0.45); ctx.beginPath(); ctx.ellipse(R * 0.16, 0, R * 0.14, R * 0.2, 0, 0, TAU); ctx.fill(); ctx.stroke();
+    ctx.restore();
+    ctx.beginPath(); ctx.arc(0, 0, R * 0.08, 0, TAU); ctx.fill(); ctx.stroke();
+  }
+  ctx.restore();
+}
+function drawOutfit() {
+  if (!outfit.head && !outfit.face) return;
+  if (outfit.head) drawHatItem(outfit.head);
+  if (outfit.face) drawFaceItem(outfit.face);
+}
+
+// ---- movimiento autónomo ----
+function wander() {
+  const m = gameScene === 'garden' ? 80 : 150;
+  pet.target = { x: rand(m, W - m), y: floorY - R };
+  setState('walk', 0);
+}
+
+// ---- tienda ----
+function shopClick(id) {
+  const it = ITEMS.find(t => t.id === id);
+  if (!it) return;
+  const owned = ownedItems.includes(id);
+  if (owned) {
+    outfit[it.slot] = outfit[it.slot] === id ? null : id;
+    AudioSys.pop(); save(); renderShop();
+    return;
+  }
+  if (coins < it.price) {
+    showBubble('me faltan galletitas 🍪');
+    return;
+  }
+  coins -= it.price;
+  ownedItems.push(id);
+  outfit[it.slot] = id;
+  AudioSys.buy();
+  confettiBurst(pet.x, pet.y - R, 12);
+  showToast('🎁 ¡Compraste: ' + it.name + '!');
+  refreshCoinChip(); save(); renderShop();
+}
+function renderShop() {
+  const list = document.getElementById('shop-list');
+  if (!list) return;
+  refreshCoinChip();
+  list.innerHTML = '';
+  for (const it of ITEMS) {
+    const owned = ownedItems.includes(it.id);
+    const worn = outfit[it.slot] === it.id;
+    const row = document.createElement('div');
+    row.className = 'item-row';
+    row.innerHTML =
+      '<div class="item-emoji">' + it.emoji + '</div>' +
+      '<div class="item-info"><div class="nm">' + it.name + '</div>' +
+      '<div class="pr">' + (owned ? 'Comprado ✓' : '🍪 ' + it.price) + '</div></div>' +
+      '<button class="btn-buy' + (worn ? ' worn' : '') + '" ' +
+      (!owned && coins < it.price ? 'disabled' : '') +
+      ' onclick="shopClick(\'' + it.id + '\')">' +
+      (worn ? 'Quitar' : owned ? 'Poner' : 'Comprar') + '</button>';
+    list.appendChild(row);
+  }
+}
+function openShop() {
+  if (!pet.name) return;
+  shopOpen.v = true;
+  renderShop();
+  const el = document.getElementById('shop');
+  el.classList.add('show');
+  AudioSys.pop();
+}
+function closeShop() {
+  shopOpen.v = false;
+  document.getElementById('shop').classList.remove('show');
+}
+
+// ---- escenas ----
+function updateSceneButtons() {
+  document.querySelectorAll('[data-scene]').forEach(b => {
+    b.classList.toggle('on', b.dataset.scene === gameScene);
+  });
+}
+function setScene(s) {
+  if (s === gameScene) return;
+  gameScene = s;
+  particles.length = 0;
+  bubbles.length = 0;
+  pet.x = clamp(pet.x, R + 30, W - R - 30);
+  pet.target = null;
+  if (pet.state === 'walk') setState('idle', 0);
+  showToast(s === 'garden' ? '🌳 Jardín: afuera también hay caos.' : '🏠 De vuelta en la sala.');
+  updateSceneButtons();
+  save();
+}
+
 /* ================= persistence ================= */
-const SAVE_KEY = 'mascotita.v1';
+const SAVE_KEY = 'mascotita.v2';
 function load() {
   try {
-    const s = JSON.parse(localStorage.getItem(SAVE_KEY));
+    let s = null;
+    try { s = JSON.parse(localStorage.getItem(SAVE_KEY)); } catch (e) {}
+    if (!s) {
+      try { s = JSON.parse(localStorage.getItem('mascotita.v1')); if (s) s._mig = 1; } catch (e) {}
+    }
     if (s && s.n) {
       const el = (Date.now() - s.ts) / 1000;
       pet.name = s.n; pet.born = s.born;
-      pet.food = clamp(s.f - el * 0.2, 0, 100);
-      pet.energy = clamp(s.e - el * 0.13, 0, 100);
-      pet.fun = clamp(s.u - el * 0.16, 0, 100);
-      pet.love = clamp(s.l - el * 0.12, 0, 100);
+      pet.food = clamp(s.f - el * RATES.food * 0.3, 0, 100);
+      pet.energy = clamp(s.e - el * RATES.energy * 0.3, 0, 100);
+      pet.fun = clamp(s.u - el * RATES.fun * 0.3, 0, 100);
+      pet.love = clamp(s.l - el * RATES.love * 0.3, 0, 100);
       day = Math.max(1, Math.floor((Date.now() - s.born) / 86400000) + 1);
+      coins = (typeof s.c === 'number' && s.c >= 0) ? s.c : 10;
+      ownedItems = Array.isArray(s.ow) ? s.ow.filter(id => ITEMS.some(t => t.id === id)) : [];
+      outfit.head = s.hd && ITEMS.some(t => t.id === s.hd && t.slot === 'head') ? s.hd : null;
+      outfit.face = s.fc && ITEMS.some(t => t.id === s.fc && t.slot === 'face') ? s.fc : null;
+      gameScene = s.sc === 'garden' ? 'garden' : 'room';
+      if (s._mig) save();
       return true;
     }
   } catch (e) {}
@@ -107,7 +311,8 @@ function save() {
   try {
     localStorage.setItem(SAVE_KEY, JSON.stringify({
       n: pet.name, f: Math.round(pet.food), e: Math.round(pet.energy),
-      u: Math.round(pet.fun), l: Math.round(pet.love), born: pet.born, ts: Date.now()
+      u: Math.round(pet.fun), l: Math.round(pet.love), born: pet.born, ts: Date.now(),
+      c: coins, ow: ownedItems, hd: outfit.head, fc: outfit.face, sc: gameScene
     }));
   } catch (e) {}
 }
@@ -223,7 +428,9 @@ function drawPet() {
   ctx.translate(p.x + p.offX, p.y);
   if (p.state === 'belly') ctx.rotate(Math.PI);
   ctx.rotate(p.tilt);
-  ctx.scale(p.sx, p.sy);
+  const sit = p.state === 'sit';
+  if (sit) ctx.translate(0, R * 0.12);
+  ctx.scale(p.sx * (sit ? 1.12 : 1), p.sy * (sit ? 0.84 : 1));
 
   // feet
   const walk = p.state === 'walk' || p.state === 'chase';
@@ -239,7 +446,8 @@ function drawPet() {
   // tail
   ctx.save();
   ctx.translate(-R * 1.02, R * 0.22);
-  ctx.rotate(Math.sin(t * 3 + 1) * 0.22);
+  const wag = (p.state === 'sit' || p.happy > 0.4 || p.state === 'dance' || p.state === 'happy') ? Math.sin(t * 9) * 0.45 : Math.sin(t * 3 + 1) * 0.22;
+  ctx.rotate(wag);
   ctx.fillStyle = '#ffd9a3'; ctx.strokeStyle = '#e09a63'; ctx.lineWidth = 3;
   ctx.beginPath(); ctx.arc(0, 0, R * 0.15, 0, TAU); ctx.fill(); ctx.stroke();
   ctx.restore();
@@ -274,6 +482,9 @@ function drawPet() {
     ctx.quadraticCurveTo(-R * 0.66, -R * 0.16, -R * 0.78, -R * 0.34);
     ctx.fill();
   }
+
+  // outfit
+  drawOutfit();
   ctx.restore();
 }
 
@@ -382,14 +593,14 @@ function update(dt) {
 
   // needs decay
   if (p.state === 'sleep') {
-    p.energy += 2.6 * dt;
+    p.energy += 1.25 * dt;
     p.food -= 0.05 * dt;
     if (p.energy >= 100) wakeUp(true);
   } else {
-    p.food -= 0.2 * dt;
-    p.energy -= 0.13 * dt;
-    p.fun -= 0.16 * dt;
-    p.love -= 0.12 * dt;
+    p.food -= RATES.food * dt;
+    p.energy -= RATES.energy * dt;
+    p.fun -= RATES.fun * dt;
+    p.love -= RATES.love * dt;
   }
   if (p.state === 'eat') p.food += 16 * dt;
   p.food = clamp(p.food, 0, 100); p.energy = clamp(p.energy, 0, 100);
@@ -476,6 +687,7 @@ function update(dt) {
         ball.catches++; p.catches++;
         p.fun = clamp(p.fun + 22, 0, 100);
         burstHearts(6);
+        addCoin(1, p.x, p.y - R * 1.3);
         AudioSys.catchS();
         setState('catch', 1.5);
         p.throwT = 1.0;
@@ -636,6 +848,9 @@ function update(dt) {
     }
     case 'catch':
     case 'idle': break;
+    case 'sit':
+      if (p.stateT <= 0) setState('idle', 0);
+      break;
   }
   if (p.stateT > 0) p.stateT -= dt;
 
@@ -653,7 +868,7 @@ function update(dt) {
     }
     ball.sy += (1 - ball.sy) * 10 * dt;
     const ballMoving = Math.abs(ball.vx) > 30 || Math.abs(ball.vy) > 30;
-    if ((p.state === 'idle' || p.state === 'walk') && pet.energy > 10 && (ballMoving || ball.y >= floorY - 15)) {
+    if ((p.state === 'idle' || p.state === 'walk' || p.state === 'sit') && pet.energy > 10 && (ballMoving || ball.y >= floorY - 15)) {
       setState('chase', 0);
     }
   }
@@ -674,15 +889,18 @@ function update(dt) {
     fireEvent();
   }
 
-  // micro actions
+  // micro actions + vida autónoma (no se queda quieto en el medio)
+  if (p.state === 'idle') idleT += dt;
   microT -= dt;
   if (microT <= 0) {
-    microT = rand(5, 11);
-    if ((p.state === 'idle' || p.state === 'walk') && p.state !== 'faint') {
+    microT = rand(4, 9);
+    if ((p.state === 'idle' || p.state === 'walk' || p.state === 'sit') && p.state !== 'faint' && !shopOpen.v && !drag) {
       const r = Math.random();
-      if (r < 0.3) { p.vy = -280; } // hop
-      else if (r < 0.5 && p.fun < 35) showBubble(pick(['estoy aburrido…', '¿jugamos?', 'mira… una mosca']));
-      else if (r < 0.7) showBubble(pick(['sniff sniff', '¿qué hacés?', 'este lugar me gusta']));
+      if (r < 0.3 && p.energy > 25 && idleT > 3) { wander(); idleT = 0; }
+      else if (r < 0.42) { p.vy = -270; } // hop
+      else if (r < 0.55 && p.fun < 40) showBubble(pick(['estoy aburrido…', '¿jugamos?', 'mira… una mosca']));
+      else if (r < 0.68) showBubble(pick(['sniff sniff', '¿qué hacés?', 'este lugar me gusta']));
+      else if (r < 0.84 && p.energy < 45 && p.state === 'idle') setState('sit', rand(2.5, 5));
     }
   }
 
@@ -703,8 +921,9 @@ function spawnZzz(n) {
 }
 function fireEvent() {
   const p = pet;
+  if (shopOpen.v) return;
   if (p.state === 'sleep' || p.state === 'faint' || p.state === 'eat') return;
-  if (!(p.state === 'idle' || p.state === 'walk')) return;
+  if (!(p.state === 'idle' || p.state === 'walk' || p.state === 'sit')) return;
   if (p._giftPending) return;
   if (p.food < 25 || p.energy < 25) return;
   let ev = null;
@@ -715,7 +934,8 @@ function fireEvent() {
   if (!ev) return;
   lastEvent = ev.id;
   setState(ev.id, ev.dur);
-  showToast(ev.toast);
+  showToast(ev.toast + '  ·  +3 🍪');
+  addCoin(3, p.x, p.y - R * 1.4);
   AudioSys.eventS();
   if (ev.id === 'gift') {
     // walk to center first
@@ -786,6 +1006,7 @@ function petPet() {
     p.love = clamp(p.love + 25, 0, 100);
     p.happy = 1;
     burstHearts(12);
+    addCoin(3, p.x, p.y - R * 1.5);
     showToast('🎉 ¡La pancita! Objetivo cumplido. ' + p.name + ' está en el cielo.');
     AudioSys.catchS();
     setState('happy', 1.4);
@@ -796,7 +1017,11 @@ function petPet() {
   p.happy = 1;
   burstHearts(5);
   AudioSys.pet();
-  if (p.state === 'idle' || p.state === 'walk') p.expr = 'happy';
+  if (p.love > 96) {
+    const now = Date.now();
+    if (now - lastPetReward > 25000) { lastPetReward = now; addCoin(1, p.x, p.y - R * 1.5); }
+  }
+  if (p.state === 'idle' || p.state === 'walk' || p.state === 'sit') p.expr = 'happy';
 }
 
 /* ================= input ================= */
@@ -816,7 +1041,7 @@ canvas.addEventListener('pointerdown', e => {
   }
   drag = null;
   // click floor → walk there
-  if ((pet.state === 'idle' || pet.state === 'walk') && pet.state !== 'faint') {
+  if ((pet.state === 'idle' || pet.state === 'walk' || pet.state === 'sit') && pet.state !== 'faint') {
     pet.target = { x: clamp(x, R, W - R), y: floorY - R };
     setState('walk', 0);
     AudioSys.pop();
@@ -902,6 +1127,8 @@ if (saved) {
   hud.classList.remove('hidden');
   $('np-name').textContent = pet.name;
   $('np-day').textContent = 'día ' + day;
+  refreshCoinChip();
+  updateSceneButtons();
   // welcome back
   const minAway = (Date.now() - (JSON.parse(localStorage.getItem(SAVE_KEY) || '{}').ts || Date.now())) / 60000;
   setTimeout(() => {
@@ -937,7 +1164,10 @@ function adopt() {
   pet.name = name;
   pet.born = Date.now();
   day = 1;
+  coins = 10; ownedItems = []; outfit.head = null; outfit.face = null; gameScene = 'room';
   save();
+  refreshCoinChip();
+  updateSceneButtons();
   localStorage.setItem('mascotita.hints', '');
   intro.classList.add('fade');
   setTimeout(() => { intro.style.display = 'none'; }, 560);
@@ -962,15 +1192,23 @@ muteBtn.addEventListener('click', () => {
 $('btn-feed').addEventListener('click', doFeed);
 $('btn-ball').addEventListener('click', doPlay);
 $('btn-sleep').addEventListener('click', doSleep);
+$('btn-shop').addEventListener('click', () => shopOpen.v ? closeShop() : openShop());
+const shopOverlay = document.getElementById('shop');
+if (shopOverlay) {
+  document.getElementById('btn-shop-close').addEventListener('click', closeShop);
+  shopOverlay.addEventListener('click', e => { if (e.target === shopOverlay) closeShop(); });
+}
+document.querySelectorAll('[data-scene]').forEach(b => b.addEventListener('click', () => setScene(b.dataset.scene)));
 
 /* ================= loop ================= */
-pet.x = pet.x || W / 2;
+pet.x = pet.x || W * 0.42;
 pet.y = pet.y || floorY - R;
 let last = performance.now();
 function frame(now) {
   const dt = Math.min(0.033, (now - last) / 1000);
   last = now;
   update(dt);
+  updateParticles(dt);  // ¡fix crítico: las partículas ahora se mueven y expiran!
   // draw
   ctx.clearRect(0, 0, W, H);
   drawScene();

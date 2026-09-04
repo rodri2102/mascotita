@@ -54,6 +54,113 @@ body{
 .pill-btn:hover{transform:translateY(-1px) scale(1.04);box-shadow:var(--shadow)}
 .pill-btn:active{transform:scale(.92)}
 
+/* ===== coin chip ===== */
+#coin-chip{
+  position:fixed;top:66px;right:14px;z-index:5;
+  min-width:52px;height:38px;padding:0 13px;border-radius:999px;
+  display:flex;align-items:center;justify-content:center;gap:5px;
+  background:linear-gradient(160deg,#fff7e0,#ffe7b3);
+  border:1.5px solid rgba(201,138,45,.45);
+  box-shadow:0 4px 14px rgba(201,138,45,.28);
+  font-weight:700;font-size:15px;color:#8a5a1d;
+  transition:transform .2s cubic-bezier(.34,1.56,.64,1);
+}
+#coin-chip.pop{animation:chipPop .5s cubic-bezier(.34,1.56,.64,1)}
+@keyframes chipPop{0%{transform:scale(1)}40%{transform:scale(1.28) rotate(-5deg)}70%{transform:scale(.95)}100%{transform:scale(1)}}
+
+/* ===== HUD secundario ===== */
+.mini-row{
+  display:flex;gap:7px;justify-content:center;flex-wrap:wrap;
+  border-top:1px dashed rgba(74,44,23,.14);padding-top:9px;
+}
+.minibtn,.scenebtn{
+  display:flex;align-items:center;gap:4px;
+  padding:6px 11px;border-radius:999px;border:1.5px solid rgba(74,44,23,.12);
+  background:rgba(255,255,255,.66);color:var(--ink);
+  font-family:inherit;font-size:12.5px;font-weight:600;cursor:pointer;
+  transition:transform .14s ease, background .2s, border-color .2s, box-shadow .2s;
+}
+.minibtn:hover,.scenebtn:hover{transform:translateY(-1px)}
+.minibtn:active,.scenebtn:active{transform:scale(.93)}
+.minibtn{
+  background:linear-gradient(160deg,#ffd166,#ffb347);
+  border-color:rgba(255,179,71,.55);color:#7a4a10;
+  box-shadow:0 3px 10px rgba(255,179,71,.35);
+}
+.scenebtn.on{
+  background:linear-gradient(160deg,#9fe0a4,#5db96a);
+  border-color:rgba(93,185,106,.5);color:#fff;
+  box-shadow:0 3px 10px rgba(93,185,106,.35);
+}
+
+/* ===== tienda (overlay) ===== */
+.overlay{
+  position:fixed;inset:0;z-index:30;
+  display:flex;align-items:center;justify-content:center;padding:20px;
+  background:rgba(60,30,10,.38);
+  backdrop-filter:blur(7px);-webkit-backdrop-filter:blur(7px);
+  opacity:0;pointer-events:none;
+  transition:opacity .3s ease;
+}
+.overlay.show{opacity:1;pointer-events:auto}
+.panel{
+  width:min(92vw,400px);max-height:84vh;overflow:auto;
+  background:rgba(255,252,245,.97);
+  border:1px solid rgba(255,255,255,.9);
+  border-radius:28px;padding:20px 18px 16px;
+  box-shadow:0 24px 70px rgba(74,44,23,.3);
+  animation:cardIn .35s cubic-bezier(.34,1.45,.64,1);
+}
+.shop-head{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+.shop-head h2{font-size:20px;font-weight:700;flex:1}
+.shop-coins{
+  font-size:15px;font-weight:600;color:#8a5a1d;
+  background:#fff3d6;border:1px solid rgba(201,138,45,.4);
+  padding:5px 12px;border-radius:999px;
+}
+.x{
+  width:34px;height:34px;border-radius:999px;border:none;cursor:pointer;
+  background:rgba(74,44,23,.08);color:var(--ink);
+  font-size:15px;font-weight:700;line-height:1;
+  transition:background .2s, transform .15s;
+}
+.x:hover{background:rgba(244,91,63,.16)}
+.x:active{transform:scale(.9)}
+.item-row{
+  display:flex;align-items:center;gap:11px;
+  padding:8px;margin-bottom:9px;border-radius:18px;
+  background:rgba(255,255,255,.7);border:1px solid rgba(74,44,23,.08);
+}
+.item-emoji{
+  width:46px;height:46px;flex:none;border-radius:14px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:24px;
+  background:radial-gradient(circle at 30% 25%,#fff6e8,#ffe1bd);
+  box-shadow:inset 0 1px 2px rgba(255,255,255,.8);
+}
+.item-info{flex:1;min-width:0}
+.item-info .nm{font-weight:600;font-size:14.5px}
+.item-info .pr{font-size:12px;color:var(--ink-soft)}
+.btn-buy{
+  border:none;cursor:pointer;border-radius:13px;padding:9px 13px;
+  font-family:inherit;font-weight:700;font-size:13px;color:#fff;
+  background:linear-gradient(160deg,#ff9d6c,#f45b3f);
+  box-shadow:0 4px 12px rgba(244,91,63,.35);
+  transition:transform .14s ease, filter .15s;
+  white-space:nowrap;
+}
+.btn-buy:hover{transform:translateY(-1px);filter:brightness(1.06)}
+.btn-buy:active{transform:scale(.94)}
+.btn-buy.worn{
+  background:linear-gradient(160deg,#9fe0a4,#5db96a);
+  box-shadow:0 4px 12px rgba(93,185,106,.35);
+}
+.btn-buy:disabled{
+  filter:grayscale(.8) brightness(.9);cursor:default;transform:none;
+  box-shadow:none;
+}
+.panel .tip{display:block;text-align:center;margin-top:10px}
+
 /* ===== toast ===== */
 #toast{
   position:fixed;top:68px;left:50%;z-index:6;
@@ -179,7 +286,12 @@ body{
   .act{min-width:62px;padding:7px 8px 6px;font-size:11.5px}
   .bar{width:48px}
 }
-@media (max-width:360px){
-  .needs{gap:9px}
-  .bar{width:40px}
+@media (max-width:380px){
+  .needs{gap:8px}
+  .bar{width:34px}
+  .actions{gap:7px}
+  .act{min-width:60px;padding:8px 7px 6px;font-size:11.5px}
+  .mini-row{gap:5px}
+  .minibtn,.scenebtn{padding:5px 8px;font-size:11.5px}
+  #coin-chip{top:64px;min-width:46px;height:34px;padding:0 10px;font-size:13.5px}
 }
