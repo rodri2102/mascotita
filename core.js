@@ -192,6 +192,22 @@ function drawParticles() {
         break;
       }
       case 'dust': ctx.beginPath(); ctx.arc(0, 0, p.size, 0, TAU); ctx.fill(); break;
+      case 'stink': {
+        // nubecita de "olor a aventura" (verde grisáceo, sube y ondula)
+        ctx.beginPath(); ctx.arc(0, 0, p.size, 0, TAU); ctx.fill();
+        ctx.strokeStyle = 'rgba(120,140,95,.5)'; ctx.lineWidth = 2;
+        ctx.beginPath(); ctx.arc(p.size * 0.6, -p.size * 0.5, p.size * 0.55, 0, TAU); ctx.stroke();
+        break;
+      }
+      case 'bubble': {
+        const gr = ctx.createRadialGradient(-p.size * 0.3, -p.size * 0.35, p.size * 0.05, 0, 0, p.size);
+        gr.addColorStop(0, 'rgba(255,255,255,.95)');
+        gr.addColorStop(0.55, 'rgba(190,225,255,.65)');
+        gr.addColorStop(1, 'rgba(130,190,240,.3)');
+        ctx.fillStyle = gr;
+        ctx.beginPath(); ctx.arc(0, 0, p.size, 0, TAU); ctx.fill();
+        break;
+      }
       case 'drop': {
         ctx.beginPath();
         ctx.moveTo(0, -p.size);

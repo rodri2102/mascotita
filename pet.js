@@ -26,7 +26,37 @@ let gameScene = 'room';               // 'room' | 'garden'
 const shopOpen = { v: false };
 
 // ritmos de decaimiento por segundo (sesión larga, sin matar a la mascota)
-const RATES = { food: 0.085, energy: 0.055, fun: 0.065, love: 0.055 };
+const RATES = { food: 0.085, energy: 0.055, fun: 0.065, love: 0.055, clean: 0.045 };
+
+// ---- aseo e higiene ----
+let clean = 100; // limpieza: baja con el tiempo; <30 la mascota "huele a aventura"
+
+// ---- personalidad: cada mascota adoptada es única ----
+let persona = null;
+const PERS = [
+  { id: 'golosa',    name: 'Golosa',    emoji: '🍪', boost: 'feed',  v: 1.7, say: ['¿eso era todo?…', 'quiero la receta', 'no existe el “suficiente”'] },
+  { id: 'fiestera',  name: 'Fiestera',  emoji: '🪩', boost: 'dance', v: 1.8, say: ['¡subile el volumen!', 'un pasito más y me voy… no, me quedo', '¿esto es fiesta o qué?'] },
+  { id: 'mimosa',    name: 'Mimosa',    emoji: '🥰', boost: 'pet',   v: 1.8, say: ['no pares, no pares', 'un poquito más de cariño', 'soy una masita de amor'] },
+  { id: 'deportista', name: 'Deportista', emoji: '🏅', boost: 'play', v: 1.7, say: ['¡otra vez! ¡otra!', 'calentando… lista… ¡ya!', 'el récord no se va a batir solo'] },
+  { id: 'dormilona', name: 'Dormilona', emoji: '😴', boost: 'sleep', v: 1.5, say: ['…diez minutos más', 'soñé que tenía más sueño', 'dormir es mi deporte'] },
+];
+function personaMod(kind) { return persona && persona.boost === kind ? persona.v : 1; }
+
+// ---- rutina de cuidado perfecta ----
+const careWin = {};
+let careBonusT = 0;
+function markCare(k) {
+  careWin[k] = Date.now();
+  if (Date.now() - careBonusT < 60000) return;
+  const keys = Object.keys(careWin).filter(k2 => Date.now() - careWin[k2] < 30000);
+  if (keys.length >= 5) {
+    careBonusT = Date.now();
+    addCoin(6, pet.x, pet.y - R * 1.7);
+    confettiBurst(pet.x, pet.y - R, 14);
+    showToast('✨ ¡Rutina de cuidado perfecta! Tu mascota está radiante. +6 🍪');
+    AudioSys.fanfare();
+  }
+}
 
 const ITEMS = [
   { id: 'party',   slot: 'head', name: 'Gorrito de fiesta', price: 15, emoji: '🎉' },
@@ -48,7 +78,7 @@ const PLACE_INFO = {
 };
 
 // contadores de logros (persistidos)
-const stats = { feed: 0, catch: 0, pet: 0, events: 0, friends: 0, games: 0, bestBub: 0, bestMemo: 0, coinsEarned: 0, bestMole: 0, bestFish: 0 };
+const stats = { feed: 0, catch: 0, pet: 0, events: 0, friends: 0, games: 0, bestBub: 0, bestMemo: 0, coinsEarned: 0, bestMole: 0, bestFish: 0, dance: 0, bath: 0 };
 let unlockedLogros = [];
 let visitedScenes = ['room'];
 let streak = 0, lastDaySeen = 0;
@@ -68,6 +98,8 @@ const LOGROS = [
   { id: 'l12', icon: '💘', name: 'Corazón compartido', desc: 'Adoptá una pareja para tu mascota', cond: () => typeof family !== 'undefined' && family.some(c => c.role === 'pareja'), rew: 12 },
   { id: 'l13', icon: '🐹', name: 'Cazadora de topos', desc: '8 topos en una partida', cond: () => stats.bestMole >= 8, rew: 7 },
   { id: 'l14', icon: '🐟', name: 'Pesca celestial', desc: '8 peces en una partida', cond: () => stats.bestFish >= 8, rew: 7 },
+  { id: 'l15', icon: '💃', name: 'Nacida para el show', desc: 'Pedile que baile 10 veces', cond: () => stats.dance >= 10, rew: 6 },
+  { id: 'l16', icon: '🫧', name: 'Reina del shampoo', desc: 'Bañala 5 veces', cond: () => stats.bath >= 5, rew: 6 },
 ];
 
 // amigo visitante
@@ -172,6 +204,10 @@ function refreshCoinChip() {
   if (el) el.textContent = '🍪 ' + coins;
   const bal = document.getElementById('shop-balance');
   if (bal) bal.textContent = coins;
+}
+function refreshNameplate() {
+  const d = document.getElementById('np-day');
+  if (d) d.textContent = 'día ' + day + (persona ? ' · ' + persona.emoji : '');
 }
 function addCoin(n, x, y) {
   coins += n;
@@ -361,6 +397,8 @@ function load() {
       pet.energy = clamp(s.e - el * RATES.energy * 0.3, 0, 100);
       pet.fun = clamp(s.u - el * RATES.fun * 0.3, 0, 100);
       pet.love = clamp(s.l - el * RATES.love * 0.3, 0, 100);
+      clean = (typeof s.cl === 'number') ? clamp(s.cl - el * RATES.clean * 0.3, 0, 100) : 100;
+      persona = (s.ps && PERS.find(p => p.id === s.ps)) || null;
       day = Math.max(1, Math.floor((Date.now() - s.born) / 86400000) + 1);
       coins = (typeof s.c === 'number' && s.c >= 0) ? s.c : 10;
       ownedItems = Array.isArray(s.ow) ? s.ow.filter(id => ITEMS.some(t => t.id === id)) : [];
@@ -388,7 +426,8 @@ function save() {
       u: Math.round(pet.fun), l: Math.round(pet.love), born: pet.born, ts: Date.now(),
       c: coins, ow: ownedItems, hd: outfit.head, fc: outfit.face, sc: gameScene,
       str: streak, lst: lastDaySeen, stt: stats, unl: unlockedLogros, vs: visitedScenes,
-      fm: Array.isArray(window.__fam) ? window.__fam : []
+      fm: Array.isArray(window.__fam) ? window.__fam : [],
+      cl: Math.round(clean), ps: persona ? persona.id : null
     }));
   } catch (e) {}
 }
@@ -654,7 +693,7 @@ function updateExpression() {
   else if (p.state === 'judge') p.expr = 'judge';
   else if (p.state === 'stare') p.expr = 'stare';
   else if (p.state === 'zoomies') p.expr = p.zt > p.stateT - 0.9 ? 'dizzy' : 'happy';
-  else if (p.state === 'dance' || p.state === 'happy' || p.state === 'belly') p.expr = 'happy';
+  else if (p.state === 'dance' || p.state === 'bath' || p.state === 'happy' || p.state === 'belly') p.expr = 'happy';
   else if (p.state === 'cola') p.expr = p.stateT < 0.5 ? 'dizzy' : 'happy';
   else if (p.state === 'caja' || p.state === 'phone' || p.state === 'selfie') p.expr = 'happy';
   else if (p.state === 'eat' || p.state === 'yawn') p.expr = 'open';
@@ -672,7 +711,7 @@ function update(dt) {
 
   // needs decay
   if (p.state === 'sleep') {
-    p.energy += 1.25 * dt;
+    p.energy += 1.25 * personaMod('sleep') * dt;
     p.food -= 0.05 * dt;
     if (p.energy >= 100) wakeUp(true);
   } else {
@@ -684,14 +723,18 @@ function update(dt) {
   if (p.state === 'eat') p.food += 16 * dt;
   p.food = clamp(p.food, 0, 100); p.energy = clamp(p.energy, 0, 100);
   p.fun = clamp(p.fun, 0, 100); p.love = clamp(p.love, 0, 100);
+  if (p.state !== 'bath') clean = clamp(clean - RATES.clean * dt * (p.state === 'sleep' ? 0.3 : 1), 0, 100);
+  if (clean < 22 && p.state === 'idle' && Math.random() < dt * 0.9) {
+    spawn({ x: p.x + rand(-26, 26), y: p.y - R - rand(0, 26), vx: rand(-18, 18), vy: rand(-42, -20), grav: -8, size: rand(8, 14), max: rand(0.9, 1.6), color: 'rgba(140,150,105,.55)', type: 'stink' });
+  }
 
   // crises
-  if (p.food <= 0 && p.state !== 'faint' && p.state !== 'sleep') {
+  if (p.food <= 0 && p.state !== 'faint' && p.state !== 'sleep' && p.state !== 'bath') {
     setState('faint', 0);
     showToast('😵 ' + p.name + ' se desmayó de hambre. ¡Modo rescate!');
     AudioSys.faintS();
   }
-  if (p.energy <= 0 && p.state !== 'sleep' && p.state !== 'faint') {
+  if (p.energy <= 0 && p.state !== 'sleep' && p.state !== 'faint' && p.state !== 'bath') {
     setState('sleep', 0);
     showToast('😴 Se durmió de pie. Ni siquiera se dio cuenta.');
     AudioSys.sleepS();
@@ -915,6 +958,21 @@ function update(dt) {
       }
       break;
     }
+    case 'bath': {
+      if (Math.random() < dt * 11) {
+        spawn({ x: p.x + rand(-34, 34), y: p.y - rand(0, 50), vx: rand(-14, 14), vy: rand(-95, -40), grav: -42, size: rand(5, 13), max: rand(0.7, 1.4), color: pick(['rgba(255,255,255,.95)', 'rgba(190,225,255,.75)', 'rgba(150,205,250,.7)']), type: 'bubble' });
+      }
+      if (Math.random() < dt * 2.4) { p.sx = 1.12; p.sy = 0.9; }
+      if (Math.random() < dt * 1.6) { spawn({ x: p.x + rand(-20, 20), y: p.y - R * 0.4, vx: rand(-10, 10), vy: rand(-60, -20), size: rand(5, 8), max: 0.8, color: 'rgba(255,255,255,.7)', type: 'sparkle' }); }
+      if (p.stateT <= 0) {
+        setState('idle', 0);
+        p.fun = clamp(p.fun + 8, 0, 100);
+        burstHearts(5);
+        showToast('🫧 ¡' + p.name + ' quedó impoluta! Brilla. Y huele a… mascota limpia.');
+        AudioSys.wakeS();
+      }
+      break;
+    }
     case 'sleep': {
       if (Math.random() < dt * 1.6) spawnZzz(1);
       break;
@@ -1019,6 +1077,7 @@ function update(dt) {
       else if (r < 0.42) { p.vy = -270; } // hop
       else if (r < 0.55 && p.fun < 40) showBubble(pick(['estoy aburrida…', '¿jugamos?', 'mira… una mosca']));
       else if (r < 0.68) showBubble(pick(IDLE_LINES));
+      else if (r < 0.76 && persona) showBubble(pick(persona.say));
       else if (r < 0.84 && p.energy < 45 && p.state === 'idle') setState('sit', rand(2.5, 5));
     }
   }
@@ -1093,12 +1152,16 @@ const SCENE_META = {
   playa: Object.assign({}, PLACE_INFO.playa, { welcome: '🏖️ En la Playa. La marea trae secretos. El cangrejo también.' }),
 };
 function gameBusy() { return bubbleGame.on || memoGame.on || shopOpen.v || (typeof arcadeActive === 'function' && arcadeActive()); }
-function petBusy() { return pet.state === 'sleep' || pet.state === 'faint' || pet.state === 'eat'; }
+function petBusy() { return pet.state === 'sleep' || pet.state === 'faint' || pet.state === 'eat' || pet.state === 'bath'; }
 
 // ---- amigos visitantes ----
 function tryVisitFriend() {
   const p = pet;
   if (petBusy() || gameBusy() || friend.active || !p.name) return;
+  if (clean < 18) {
+    showToast('🫧 ' + pet.name + ' apesta a aventura… hoy no viene nadie. ¡A bañarla!');
+    return;
+  }
   const kinds = ['michi', 'pio'];
   if (gameScene === 'plaza') kinds.push('michi', 'michi', 'pio');
   friend.active = true;
@@ -1476,8 +1539,12 @@ function doFeed() {
   if (p.food > 92 && !wasFaint) {
     showBubble('ya comí mucho 😌'); return;
   }
+  if (p.state === 'bath') { showBubble('estoy en el baño 🛁 ¡privacidad!'); return; }
   if (wasFaint) p.faintSaved = true;
   stats.feed++;
+  pet.love = clamp(pet.love + 2 * personaMod('feed'), 0, 100);
+  pet.fun = clamp(pet.fun + 2 * personaMod('feed'), 0, 100);
+  markCare('feed');
   bowl.active = true; bowl.t = 0;
   bowl.x = clamp(p.x + p.face * 80, 60, W - 60); bowl.y = floorY;
   setState('eat', 3.1);
@@ -1493,6 +1560,9 @@ function doPlay() {
   if (p.state === 'faint') { showBubble('primero… comida…'); return; }
   if (p.energy < 12) { showBubble('estoy agotado… dejame dormir un poco'); return; }
   if (ball.active) { showBubble('¡ya estamos jugando! 🎾'); return; }
+  if (p.state === 'bath') { showBubble('jugá vos un rato, me estoy bañando'); return; }
+  markCare('play');
+  p.fun = clamp(p.fun + 4 * personaMod('play'), 0, 100);
   ball.active = true;
   ball.x = p.x + p.face * 60; ball.y = floorY - 20;
   ball.vx = p.face * rand(120, 200); ball.vy = -rand(260, 340);
@@ -1503,14 +1573,64 @@ function doSleep() {
   const p = pet;
   if (typeof cancelArcade === 'function' && cancelArcade(true)) { /* a dormir se dijo */ }
   if (gameBusy()) return;
+  if (p.state === 'bath') { showBubble('no duermo en el agua. aprendí de un video.'); return; }
   if (p.state === 'caja') { showBubble('dormir en la caja es la única vida que conozco'); setState('sleep', 0); return; }
   if (p.state === 'sleep') { wakeUp(false); return; }
   if (p.energy > 92) { showBubble('no tengo sueño 😌'); return; }
   if (p.state === 'faint') { showBubble('no puedo dormir… me desmayé, es distinto'); return; }
   if (p.state === 'eat') return;
+  markCare('sleep');
   setState('sleep', 0);
   showToast('🌙 Buenas noches, ' + p.name + '. Que sueñes con croquetas gigantes.');
   AudioSys.sleepS();
+}
+function doDance() {
+  const p = pet;
+  if (typeof cancelArcade === 'function' && cancelArcade(true)) { /* la música pudo más */ }
+  if (gameBusy()) { showBubble('ahora no, estoy en otra cosa'); return; }
+  if (p.state === 'sleep') { showBubble('shhh… estoy bailando en mis sueños'); return; }
+  if (p.state === 'faint') { showBubble('primero… comida… después el show'); return; }
+  if (p.state === 'bath') { showBubble('bailar mojado resbala. no, gracias'); return; }
+  if (p.energy < 12) { showBubble('sin energía… ni un pasito'); return; }
+  stats.dance++;
+  if (p.state === 'dance') {
+    p.stateT = Math.max(p.stateT, 2);
+    showBubble('¡otra vez! ¡qué temón!');
+    markCare('dance');
+    AudioSys.eventS();
+    return;
+  }
+  setState('dance', rand(3.6, 5.2));
+  p.fun = clamp(p.fun + 6 * personaMod('dance'), 0, 100);
+  markCare('dance');
+  // si la familia está cerca… ¡fiesta!
+  if (typeof family !== 'undefined' && family.length) {
+    const comp = family.find(c => Math.abs(c.x - p.x) < 330);
+    if (comp) {
+      comp.playT = Math.max(comp.playT || 0, 3.2);
+      if (typeof compHearts === 'function') compHearts(comp, 5);
+      p.fun = clamp(p.fun + 6, 0, 100);
+      showToast('🪩 ¡' + comp.nm + ' se sumó a la fiesta!');
+    }
+  }
+  AudioSys.eventS();
+  save();
+}
+function doBath() {
+  const p = pet;
+  if (typeof cancelArcade === 'function' && cancelArcade(true)) { /* higiene primero */ }
+  if (gameBusy()) { showBubble('un segundito, estoy en algo'); return; }
+  if (p.state === 'sleep') { showBubble('el agua fría me despierta… mejor no'); return; }
+  if (p.state === 'faint') { showBubble('no puedo bañarme desmayada… es complicado'); return; }
+  if (p.state === 'bath') return;
+  if (p.state === 'caja') { showBubble('el baño queda afuera de la caja. no, gracias.'); return; }
+  if (clean > 88) { showBubble('ya estoy limpia… reluciente, incluso'); return; }
+  stats.bath++;
+  clean = 100;
+  markCare('bath');
+  setState('bath', 3.8);
+  AudioSys.wakeS();
+  save();
 }
 function petPet() {
   const p = pet;
@@ -1518,9 +1638,10 @@ function petPet() {
   if (gameBusy()) return;
   if (p.state === 'sleep') { wakeUp(false); return; }
   if (p.state === 'belly') {
-    p.love = clamp(p.love + 25, 0, 100);
+    p.love = clamp(p.love + 25 * personaMod('pet'), 0, 100);
     p.happy = 1;
     stats.pet++;
+    markCare('pet');
     burstHearts(12);
     addCoin(3, p.x, p.y - R * 1.5);
     showToast('🎉 ¡La pancita! Objetivo cumplido. ' + p.name + ' está en el cielo.');
@@ -1529,10 +1650,12 @@ function petPet() {
     return;
   }
   if (p.state === 'faint') { showBubble('…no es cariño lo que necesito. Es comida.'); return; }
+  if (p.state === 'bath') { showBubble('estoy toda espumosa… tocame cuando esté lista'); return; }
   if (p.state === 'caja') { showBubble('acá no se llega. es mi fortaleza.'); return; }
-  p.love = clamp(p.love + 10, 0, 100);
+  p.love = clamp(p.love + 10 * personaMod('pet'), 0, 100);
   stats.pet++;
   p.happy = 1;
+  markCare('pet');
   burstHearts(5);
   AudioSys.pet();
   if (p.love > 96) {
@@ -1621,6 +1744,7 @@ const bars = {
   energy: document.getElementById('bar-energy'),
   fun: document.getElementById('bar-fun'),
   love: document.getElementById('bar-love'),
+  clean: document.getElementById('bar-clean'),
 };
 const barState = {};
 function setBar(key, val) {
@@ -1638,6 +1762,7 @@ function updateHUD() {
   setBar('energy', pet.energy);
   setBar('fun', pet.fun);
   setBar('love', pet.love);
+  setBar('clean', clean);
   const lbl = document.getElementById('sleep-label');
   const want = pet.state === 'sleep' ? 'Despertar' : 'Dormir';
   if (lbl.textContent !== want) lbl.textContent = want;
@@ -1658,7 +1783,7 @@ if (saved) {
   hud.classList.remove('hidden');
   $('btn-menu').classList.remove('hidden');
   $('np-name').textContent = pet.name;
-  $('np-day').textContent = 'día ' + day;
+  refreshNameplate();
   refreshCoinChip();
   updateSceneButtons();
   // welcome back
@@ -1681,6 +1806,8 @@ function showHint(i) {
     '🖐 Tocá a ' + pet.name + ' para darle cariño',
     '🍖 Cuando tenga hambre, dale de comer',
     '🎾 Arrastrala para lanzarla. Rebota. Le encanta.',
+    '💃 Pedile que baile: cada mascota tiene una personalidad y brilla en algo distinto',
+    '🛁 Mirá la gotita del HUD: si baja mucho, tu mascota empieza a oler a aventura',
   ];
   if (i < hints.length) {
     setTimeout(() => { showToast(hints[i]); showHint(i + 1); }, i === 0 ? 5000 : 14000);
@@ -1696,6 +1823,8 @@ function adopt() {
   pet.name = name;
   pet.born = Date.now();
   day = 1;
+  persona = pick(PERS);
+  clean = 100;
   coins = 10; ownedItems = []; outfit.head = null; outfit.face = null; gameScene = 'room';
   save();
   refreshCoinChip();
@@ -1707,11 +1836,12 @@ function adopt() {
   hud.classList.remove('hidden');
   $('btn-menu').classList.remove('hidden');
   $('np-name').textContent = pet.name;
-  $('np-day').textContent = 'día ' + day;
+  refreshNameplate();
   AudioSys.fanfare();
   confettiBurst(W / 2, H * 0.4, 60);
   setTimeout(() => showToast('🐾 ¡' + name + ' llegó a casa!'), 700);
-  setTimeout(() => showHint(0), 4000);
+  setTimeout(() => showToast('🧬 ' + name + ' es ' + persona.name + ' ' + persona.emoji + '. Cada mascota es única: descubrí en qué brilla.'), 2500);
+  setTimeout(() => showHint(0), 6500);
 }
 $('btn-adopt').addEventListener('click', adopt);
 nameInput.addEventListener('keydown', e => { if (e.key === 'Enter') adopt(); });
@@ -1724,6 +1854,8 @@ muteBtn.addEventListener('click', () => {
 });
 $('btn-feed').addEventListener('click', doFeed);
 $('btn-ball').addEventListener('click', doPlay);
+$('btn-dance').addEventListener('click', doDance);
+$('btn-bath').addEventListener('click', doBath);
 $('btn-sleep').addEventListener('click', doSleep);
 $('btn-shop').addEventListener('click', () => shopOpen.v ? closeShop() : openShop());
 document.querySelectorAll('[data-scene]').forEach(b => b.addEventListener('click', () => setScene(b.dataset.scene)));
@@ -1765,7 +1897,7 @@ const btnMenu = $('btn-menu');
 if (btnMenu) btnMenu.addEventListener('click', () => openOverlay('menu'));
 function renderMenuMeta() {
   const meta = document.getElementById('menu-meta');
-  if (meta) meta.textContent = (pet.name || '—') + ' · día ' + day + ' · 🍪 ' + coins;
+  if (meta) meta.textContent = (pet.name || '—') + ' · día ' + day + (persona ? ' · ' + persona.emoji + ' ' + persona.name : '') + ' · 🍪 ' + coins;
   const sub = document.getElementById('mn-new-sub');
   if (sub) sub.textContent = 'Despedite de ' + pet.name + ' y adoptá otra desde el día 1.';
 }

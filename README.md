@@ -14,6 +14,8 @@ Una web autocontenida (un solo `index.html` con todo embebido) — sin servidore
 - **Arrastrala** para lanzarla (rebota, le encanta)
 - **Comer** 🍖 — alimentala antes de que se desmaye
 - **Jugar** 🎾 — atrapá la pelota: +1 🍪 por atrapada
+- **Bailar** 💃 — pedile que baile cuando quieras (si hay familia cerca, ¡se arma fiesta!)
+- **Bañar** 🛁 — la gotita del HUD es la higiene: si baja mucho empieza a oler a aventura (y nadie la va a visitar)
 - **Dormir** 🌙 — o se va a dormir de pie sola
 - Las **necesidades** bajan con el tiempo real; volvé aunque cierres la pestaña
 - Tu mascota **no se queda quieta**: pasea sola, se sienta, huele, salta y hace travesuras
@@ -26,7 +28,9 @@ Una web autocontenida (un solo `index.html` con todo embebido) — sin servidore
 - **💞 Familia (SIMS de animales)**: adoptá hasta **2 hermanos** (Perrito 🐶, Gatito 🐱, Conejín 🐰, Patito 🦆, Dino 🦖) y una **pareja** 💘 para tu mascota. Viven en la escena, pasean, duermen en ronda con ella, se pueden tocar (reaccionan con corazones 🥰), juegan juntos (hermanos) y tienen momentos románticos (la pareja da amor extra). Cada miembro puede despedirse con la ✕ (doble toque de confirmación).
 - **🕹️ Minijuegos**: **Burbujas** 🫧, **Memorión** 🎵, **Topos** 🐹 (¡hay uno dorado que vale ×3!) y **Peces voladores** 🐟 (cuidado con la zapatilla del vecino); todos dan 🍪 y suben el ánimo
 - **🐱 Amigos**: Michi la gata y Pío el pájaro vienen a jugar de visita (en la Plaza llegan más seguido)
-- **🏆 Logros**: 14 logros con recompensas (atrapadas, caricias, visitas, rachas, exploración, familia, topos y pesca…)
+- **🏆 Logros**: 16 logros con recompensas (atrapadas, caricias, visitas, rachas, exploración, familia, topos, pesca, bailes y baños…)
+- **🧬 Personalidad única**: cada mascota adoptada es distinta — Golosa 🍪, Fiestera 🪩, Mimosa 🥰, Deportista 🏅 o Dormilona 😴. Brilla más en su actividad favorita (come/ baila / acaricia / juega / duerme mejor), opina con sus frases y se ve en el cartelito del nombre y en el menú.
+- **✨ Rutina perfecta**: si hacés 5 cuidados distintos (comer, jugar, bailar, bañar, acariciar, dormir) en 30 segundos, tu mascota queda radiante y te da +6 🍪
 - **Crecimiento**: tu mascota es bebé 🍼, joven ✨ y grande 🌟 con los días, y volver cada día suma racha 🔥
 - **Escenas**: **Sala** 🏠 y **Jardín** 🌳, de día y de noche (sol, luna, estrellas, nubes)
 - **Acciones siempre responden**: si tu mascota está en medio de una payasada (bailando, en la caja, juzgándote…) y le pedís que camine, coma, juegue o duerma, interrumpe con gracia — nunca más se queda "en algo" sin poder hacer nada. Los minijuegos de escena se cortan solos si querés cuidar a tu mascota.
@@ -55,6 +59,10 @@ Zoomies, estornudos con arcoíris, regalos (medias, hojas), juicios a tu histori
 | Repos con juegos/ejemplos | GitHub (filtrar por licencia MIT/CC0) | Según repo |
 
 Regla de oro: siempre verificar la licencia de **cada** archivo antes de publicar.
+
+## Acciones siempre responden
+
+Si tu mascota está en medio de una payasada (bailando, en la caja, juzgándote, bañándose…), pedirle que camine, coma, juegue, baile, se bañe o duerma la interrumpe con gracia. Nunca se queda "en algo" sin poder hacer nada.
 
 ## Archivos
 

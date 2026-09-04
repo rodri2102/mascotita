@@ -192,7 +192,7 @@ body{
 .need{display:flex;align-items:center;gap:5px;color:var(--ink)}
 .need svg{flex:none}
 .bar{
-  width:46px;height:8px;border-radius:999px;overflow:hidden;
+  width:40px;height:8px;border-radius:999px;overflow:hidden;
   background:rgba(74,44,23,.13);
   box-shadow:inset 0 1px 2px rgba(74,44,23,.18);
 }
@@ -209,18 +209,20 @@ body{
 .actions{display:flex;gap:8px}
 .act{
   display:flex;flex-direction:column;align-items:center;gap:2px;
-  min-width:66px;padding:7px 9px 6px;border-radius:16px;
+  min-width:60px;padding:6px 6px 5px;border-radius:16px;
   border:none;cursor:pointer;color:#fff;
   background:linear-gradient(160deg,#ff9d6c,#ff6f61);
   box-shadow:0 6px 16px rgba(255,111,97,.35), inset 0 1px 0 rgba(255,255,255,.35);
-  font-family:inherit;font-weight:600;font-size:12px;
+  font-family:inherit;font-weight:600;font-size:11.5px;
   transition:transform .16s cubic-bezier(.34,1.56,.64,1), box-shadow .16s ease, filter .16s;
 }
 .act:hover{transform:translateY(-2px);filter:brightness(1.05)}
 .act:active{transform:translateY(1px) scale(.94);box-shadow:0 2px 8px rgba(255,111,97,.3)}
 .act:disabled{filter:grayscale(.7) brightness(.85);cursor:default;transform:none}
 .act:nth-child(2){background:linear-gradient(160deg,#6cc9ff,#3f9ff0);box-shadow:0 6px 16px rgba(63,159,240,.35), inset 0 1px 0 rgba(255,255,255,.35)}
-.act:nth-child(3){background:linear-gradient(160deg,#9a8cff,#6d5ae8);box-shadow:0 6px 16px rgba(109,90,232,.35), inset 0 1px 0 rgba(255,255,255,.35)}
+.act:nth-child(3){background:linear-gradient(160deg,#ff9db4,#f25d8f);box-shadow:0 6px 16px rgba(242,93,143,.35), inset 0 1px 0 rgba(255,255,255,.35)}
+.act:nth-child(4){background:linear-gradient(160deg,#7fd8e8,#3fb6c9);box-shadow:0 6px 16px rgba(63,182,201,.35), inset 0 1px 0 rgba(255,255,255,.35)}
+.act:nth-child(5){background:linear-gradient(160deg,#9a8cff,#6d5ae8);box-shadow:0 6px 16px rgba(109,90,232,.35), inset 0 1px 0 rgba(255,255,255,.35)}
 
 /* ===== intro ===== */
 #intro{
@@ -290,16 +292,18 @@ body{
 }
 @media (max-height:700px){
   #hud{gap:6px;padding:8px 12px 9px;border-radius:20px}
-  .bar{width:36px}
-  .act{min-width:58px;padding:6px 7px 5px;font-size:11px}
+  .bar{width:34px}
+  .act{min-width:52px;padding:5px 5px 4px;font-size:10.5px}
+  .act svg{width:18px;height:18px}
   .minibtn,.scenebtn{padding:4px 8px;font-size:11px}
-  .needs{gap:9px}
+  .needs{gap:8px}
 }
 @media (max-width:380px){
-  .needs{gap:7px}
-  .bar{width:32px}
-  .actions{gap:6px}
-  .act{min-width:56px;padding:6px 6px 5px;font-size:11px}
+  .needs{gap:6px}
+  .bar{width:30px}
+  .actions{gap:5px}
+  .act{min-width:50px;padding:5px 4px 4px;font-size:10.5px}
+  .act svg{width:18px;height:18px}
   .mini-row{gap:5px}
   .minibtn,.scenebtn{padding:4px 7px;font-size:10.5px}
   #coin-chip{top:64px;min-width:46px;height:34px;padding:0 10px;font-size:13.5px}

@@ -204,7 +204,7 @@ body{
 .need{display:flex;align-items:center;gap:5px;color:var(--ink)}
 .need svg{flex:none}
 .bar{
-  width:46px;height:8px;border-radius:999px;overflow:hidden;
+  width:40px;height:8px;border-radius:999px;overflow:hidden;
   background:rgba(74,44,23,.13);
   box-shadow:inset 0 1px 2px rgba(74,44,23,.18);
 }
@@ -221,18 +221,20 @@ body{
 .actions{display:flex;gap:8px}
 .act{
   display:flex;flex-direction:column;align-items:center;gap:2px;
-  min-width:66px;padding:7px 9px 6px;border-radius:16px;
+  min-width:60px;padding:6px 6px 5px;border-radius:16px;
   border:none;cursor:pointer;color:#fff;
   background:linear-gradient(160deg,#ff9d6c,#ff6f61);
   box-shadow:0 6px 16px rgba(255,111,97,.35), inset 0 1px 0 rgba(255,255,255,.35);
-  font-family:inherit;font-weight:600;font-size:12px;
+  font-family:inherit;font-weight:600;font-size:11.5px;
   transition:transform .16s cubic-bezier(.34,1.56,.64,1), box-shadow .16s ease, filter .16s;
 }
 .act:hover{transform:translateY(-2px);filter:brightness(1.05)}
 .act:active{transform:translateY(1px) scale(.94);box-shadow:0 2px 8px rgba(255,111,97,.3)}
 .act:disabled{filter:grayscale(.7) brightness(.85);cursor:default;transform:none}
 .act:nth-child(2){background:linear-gradient(160deg,#6cc9ff,#3f9ff0);box-shadow:0 6px 16px rgba(63,159,240,.35), inset 0 1px 0 rgba(255,255,255,.35)}
-.act:nth-child(3){background:linear-gradient(160deg,#9a8cff,#6d5ae8);box-shadow:0 6px 16px rgba(109,90,232,.35), inset 0 1px 0 rgba(255,255,255,.35)}
+.act:nth-child(3){background:linear-gradient(160deg,#ff9db4,#f25d8f);box-shadow:0 6px 16px rgba(242,93,143,.35), inset 0 1px 0 rgba(255,255,255,.35)}
+.act:nth-child(4){background:linear-gradient(160deg,#7fd8e8,#3fb6c9);box-shadow:0 6px 16px rgba(63,182,201,.35), inset 0 1px 0 rgba(255,255,255,.35)}
+.act:nth-child(5){background:linear-gradient(160deg,#9a8cff,#6d5ae8);box-shadow:0 6px 16px rgba(109,90,232,.35), inset 0 1px 0 rgba(255,255,255,.35)}
 
 /* ===== intro ===== */
 #intro{
@@ -302,16 +304,18 @@ body{
 }
 @media (max-height:700px){
   #hud{gap:6px;padding:8px 12px 9px;border-radius:20px}
-  .bar{width:36px}
-  .act{min-width:58px;padding:6px 7px 5px;font-size:11px}
+  .bar{width:34px}
+  .act{min-width:52px;padding:5px 5px 4px;font-size:10.5px}
+  .act svg{width:18px;height:18px}
   .minibtn,.scenebtn{padding:4px 8px;font-size:11px}
-  .needs{gap:9px}
+  .needs{gap:8px}
 }
 @media (max-width:380px){
-  .needs{gap:7px}
-  .bar{width:32px}
-  .actions{gap:6px}
-  .act{min-width:56px;padding:6px 6px 5px;font-size:11px}
+  .needs{gap:6px}
+  .bar{width:30px}
+  .actions{gap:5px}
+  .act{min-width:50px;padding:5px 4px 4px;font-size:10.5px}
+  .act svg{width:18px;height:18px}
   .mini-row{gap:5px}
   .minibtn,.scenebtn{padding:4px 7px;font-size:10.5px}
   #coin-chip{top:64px;min-width:46px;height:34px;padding:0 10px;font-size:13.5px}
@@ -496,6 +500,10 @@ body{
       <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
       <div class="bar"><i id="bar-love"></i></div>
     </div>
+    <div class="need" title="Higiene: bañala antes de que huela a aventura">
+      <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M12 2.6s6 6.3 6 10.7a6 6 0 0 1-12 0C6 8.9 12 2.6 12 2.6z"/><path fill="none" stroke="#fff" stroke-width="1.3" d="M8.5 17.5a4 4 0 0 0 7 0"/></svg>
+      <div class="bar"><i id="bar-clean"></i></div>
+    </div>
   </div>
   <div class="actions">
     <button id="btn-feed" class="act">
@@ -505,6 +513,14 @@ body{
     <button id="btn-ball" class="act">
       <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><circle cx="12" cy="12" r="9" fill="currentColor"/><path d="M12 3a9 9 0 0 1 9 9h-9z" fill="#fff" opacity=".85"/><path d="M3 12h9a9 9 0 0 1-9-9z" fill="#fff" opacity=".85"/></svg>
       <span>Jugar</span>
+    </button>
+    <button id="btn-dance" class="act">
+      <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path fill="currentColor" d="M9 3v11.55A4 4 0 1 0 11 18V7h6V3H9z"/></svg>
+      <span>Bailar</span>
+    </button>
+    <button id="btn-bath" class="act">
+      <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path fill="currentColor" d="M12 2.6s6 6.3 6 10.7a6 6 0 0 1-12 0C6 8.9 12 2.6 12 2.6z"/></svg>
+      <span>Bañar</span>
     </button>
     <button id="btn-sleep" class="act">
       <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path fill="currentColor" d="M12 3a9 9 0 1 0 9 9c0-.46-.04-.92-.1-1.36a5.39 5.39 0 0 1-4.4 2.26 5.4 5.4 0 0 1-5.4-5.4c0-1.81.89-3.42 2.26-4.4A9.1 9.1 0 0 0 12 3z"/></svg>
@@ -599,7 +615,7 @@ body{
   <div class="panel">
     <div class="shop-head">
       <h2>🏆 Logros</h2>
-      <div class="shop-coins" id="logros-count">0/14</div>
+      <div class="shop-coins" id="logros-count">0/16</div>
       <button data-close="logros" class="x" title="Cerrar">✕</button>
     </div>
     <div id="logros-list"></div>
@@ -859,6 +875,22 @@ function drawParticles() {
         break;
       }
       case 'dust': ctx.beginPath(); ctx.arc(0, 0, p.size, 0, TAU); ctx.fill(); break;
+      case 'stink': {
+        // nubecita de "olor a aventura" (verde grisáceo, sube y ondula)
+        ctx.beginPath(); ctx.arc(0, 0, p.size, 0, TAU); ctx.fill();
+        ctx.strokeStyle = 'rgba(120,140,95,.5)'; ctx.lineWidth = 2;
+        ctx.beginPath(); ctx.arc(p.size * 0.6, -p.size * 0.5, p.size * 0.55, 0, TAU); ctx.stroke();
+        break;
+      }
+      case 'bubble': {
+        const gr = ctx.createRadialGradient(-p.size * 0.3, -p.size * 0.35, p.size * 0.05, 0, 0, p.size);
+        gr.addColorStop(0, 'rgba(255,255,255,.95)');
+        gr.addColorStop(0.55, 'rgba(190,225,255,.65)');
+        gr.addColorStop(1, 'rgba(130,190,240,.3)');
+        ctx.fillStyle = gr;
+        ctx.beginPath(); ctx.arc(0, 0, p.size, 0, TAU); ctx.fill();
+        break;
+      }
       case 'drop': {
         ctx.beginPath();
         ctx.moveTo(0, -p.size);
@@ -1449,7 +1481,37 @@ let gameScene = 'room';               // 'room' | 'garden'
 const shopOpen = { v: false };
 
 // ritmos de decaimiento por segundo (sesión larga, sin matar a la mascota)
-const RATES = { food: 0.085, energy: 0.055, fun: 0.065, love: 0.055 };
+const RATES = { food: 0.085, energy: 0.055, fun: 0.065, love: 0.055, clean: 0.045 };
+
+// ---- aseo e higiene ----
+let clean = 100; // limpieza: baja con el tiempo; <30 la mascota "huele a aventura"
+
+// ---- personalidad: cada mascota adoptada es única ----
+let persona = null;
+const PERS = [
+  { id: 'golosa',    name: 'Golosa',    emoji: '🍪', boost: 'feed',  v: 1.7, say: ['¿eso era todo?…', 'quiero la receta', 'no existe el “suficiente”'] },
+  { id: 'fiestera',  name: 'Fiestera',  emoji: '🪩', boost: 'dance', v: 1.8, say: ['¡subile el volumen!', 'un pasito más y me voy… no, me quedo', '¿esto es fiesta o qué?'] },
+  { id: 'mimosa',    name: 'Mimosa',    emoji: '🥰', boost: 'pet',   v: 1.8, say: ['no pares, no pares', 'un poquito más de cariño', 'soy una masita de amor'] },
+  { id: 'deportista', name: 'Deportista', emoji: '🏅', boost: 'play', v: 1.7, say: ['¡otra vez! ¡otra!', 'calentando… lista… ¡ya!', 'el récord no se va a batir solo'] },
+  { id: 'dormilona', name: 'Dormilona', emoji: '😴', boost: 'sleep', v: 1.5, say: ['…diez minutos más', 'soñé que tenía más sueño', 'dormir es mi deporte'] },
+];
+function personaMod(kind) { return persona && persona.boost === kind ? persona.v : 1; }
+
+// ---- rutina de cuidado perfecta ----
+const careWin = {};
+let careBonusT = 0;
+function markCare(k) {
+  careWin[k] = Date.now();
+  if (Date.now() - careBonusT < 60000) return;
+  const keys = Object.keys(careWin).filter(k2 => Date.now() - careWin[k2] < 30000);
+  if (keys.length >= 5) {
+    careBonusT = Date.now();
+    addCoin(6, pet.x, pet.y - R * 1.7);
+    confettiBurst(pet.x, pet.y - R, 14);
+    showToast('✨ ¡Rutina de cuidado perfecta! Tu mascota está radiante. +6 🍪');
+    AudioSys.fanfare();
+  }
+}
 
 const ITEMS = [
   { id: 'party',   slot: 'head', name: 'Gorrito de fiesta', price: 15, emoji: '🎉' },
@@ -1471,7 +1533,7 @@ const PLACE_INFO = {
 };
 
 // contadores de logros (persistidos)
-const stats = { feed: 0, catch: 0, pet: 0, events: 0, friends: 0, games: 0, bestBub: 0, bestMemo: 0, coinsEarned: 0, bestMole: 0, bestFish: 0 };
+const stats = { feed: 0, catch: 0, pet: 0, events: 0, friends: 0, games: 0, bestBub: 0, bestMemo: 0, coinsEarned: 0, bestMole: 0, bestFish: 0, dance: 0, bath: 0 };
 let unlockedLogros = [];
 let visitedScenes = ['room'];
 let streak = 0, lastDaySeen = 0;
@@ -1491,6 +1553,8 @@ const LOGROS = [
   { id: 'l12', icon: '💘', name: 'Corazón compartido', desc: 'Adoptá una pareja para tu mascota', cond: () => typeof family !== 'undefined' && family.some(c => c.role === 'pareja'), rew: 12 },
   { id: 'l13', icon: '🐹', name: 'Cazadora de topos', desc: '8 topos en una partida', cond: () => stats.bestMole >= 8, rew: 7 },
   { id: 'l14', icon: '🐟', name: 'Pesca celestial', desc: '8 peces en una partida', cond: () => stats.bestFish >= 8, rew: 7 },
+  { id: 'l15', icon: '💃', name: 'Nacida para el show', desc: 'Pedile que baile 10 veces', cond: () => stats.dance >= 10, rew: 6 },
+  { id: 'l16', icon: '🫧', name: 'Reina del shampoo', desc: 'Bañala 5 veces', cond: () => stats.bath >= 5, rew: 6 },
 ];
 
 // amigo visitante
@@ -1595,6 +1659,10 @@ function refreshCoinChip() {
   if (el) el.textContent = '🍪 ' + coins;
   const bal = document.getElementById('shop-balance');
   if (bal) bal.textContent = coins;
+}
+function refreshNameplate() {
+  const d = document.getElementById('np-day');
+  if (d) d.textContent = 'día ' + day + (persona ? ' · ' + persona.emoji : '');
 }
 function addCoin(n, x, y) {
   coins += n;
@@ -1784,6 +1852,8 @@ function load() {
       pet.energy = clamp(s.e - el * RATES.energy * 0.3, 0, 100);
       pet.fun = clamp(s.u - el * RATES.fun * 0.3, 0, 100);
       pet.love = clamp(s.l - el * RATES.love * 0.3, 0, 100);
+      clean = (typeof s.cl === 'number') ? clamp(s.cl - el * RATES.clean * 0.3, 0, 100) : 100;
+      persona = (s.ps && PERS.find(p => p.id === s.ps)) || null;
       day = Math.max(1, Math.floor((Date.now() - s.born) / 86400000) + 1);
       coins = (typeof s.c === 'number' && s.c >= 0) ? s.c : 10;
       ownedItems = Array.isArray(s.ow) ? s.ow.filter(id => ITEMS.some(t => t.id === id)) : [];
@@ -1811,7 +1881,8 @@ function save() {
       u: Math.round(pet.fun), l: Math.round(pet.love), born: pet.born, ts: Date.now(),
       c: coins, ow: ownedItems, hd: outfit.head, fc: outfit.face, sc: gameScene,
       str: streak, lst: lastDaySeen, stt: stats, unl: unlockedLogros, vs: visitedScenes,
-      fm: Array.isArray(window.__fam) ? window.__fam : []
+      fm: Array.isArray(window.__fam) ? window.__fam : [],
+      cl: Math.round(clean), ps: persona ? persona.id : null
     }));
   } catch (e) {}
 }
@@ -2077,7 +2148,7 @@ function updateExpression() {
   else if (p.state === 'judge') p.expr = 'judge';
   else if (p.state === 'stare') p.expr = 'stare';
   else if (p.state === 'zoomies') p.expr = p.zt > p.stateT - 0.9 ? 'dizzy' : 'happy';
-  else if (p.state === 'dance' || p.state === 'happy' || p.state === 'belly') p.expr = 'happy';
+  else if (p.state === 'dance' || p.state === 'bath' || p.state === 'happy' || p.state === 'belly') p.expr = 'happy';
   else if (p.state === 'cola') p.expr = p.stateT < 0.5 ? 'dizzy' : 'happy';
   else if (p.state === 'caja' || p.state === 'phone' || p.state === 'selfie') p.expr = 'happy';
   else if (p.state === 'eat' || p.state === 'yawn') p.expr = 'open';
@@ -2095,7 +2166,7 @@ function update(dt) {
 
   // needs decay
   if (p.state === 'sleep') {
-    p.energy += 1.25 * dt;
+    p.energy += 1.25 * personaMod('sleep') * dt;
     p.food -= 0.05 * dt;
     if (p.energy >= 100) wakeUp(true);
   } else {
@@ -2107,14 +2178,18 @@ function update(dt) {
   if (p.state === 'eat') p.food += 16 * dt;
   p.food = clamp(p.food, 0, 100); p.energy = clamp(p.energy, 0, 100);
   p.fun = clamp(p.fun, 0, 100); p.love = clamp(p.love, 0, 100);
+  if (p.state !== 'bath') clean = clamp(clean - RATES.clean * dt * (p.state === 'sleep' ? 0.3 : 1), 0, 100);
+  if (clean < 22 && p.state === 'idle' && Math.random() < dt * 0.9) {
+    spawn({ x: p.x + rand(-26, 26), y: p.y - R - rand(0, 26), vx: rand(-18, 18), vy: rand(-42, -20), grav: -8, size: rand(8, 14), max: rand(0.9, 1.6), color: 'rgba(140,150,105,.55)', type: 'stink' });
+  }
 
   // crises
-  if (p.food <= 0 && p.state !== 'faint' && p.state !== 'sleep') {
+  if (p.food <= 0 && p.state !== 'faint' && p.state !== 'sleep' && p.state !== 'bath') {
     setState('faint', 0);
     showToast('😵 ' + p.name + ' se desmayó de hambre. ¡Modo rescate!');
     AudioSys.faintS();
   }
-  if (p.energy <= 0 && p.state !== 'sleep' && p.state !== 'faint') {
+  if (p.energy <= 0 && p.state !== 'sleep' && p.state !== 'faint' && p.state !== 'bath') {
     setState('sleep', 0);
     showToast('😴 Se durmió de pie. Ni siquiera se dio cuenta.');
     AudioSys.sleepS();
@@ -2338,6 +2413,21 @@ function update(dt) {
       }
       break;
     }
+    case 'bath': {
+      if (Math.random() < dt * 11) {
+        spawn({ x: p.x + rand(-34, 34), y: p.y - rand(0, 50), vx: rand(-14, 14), vy: rand(-95, -40), grav: -42, size: rand(5, 13), max: rand(0.7, 1.4), color: pick(['rgba(255,255,255,.95)', 'rgba(190,225,255,.75)', 'rgba(150,205,250,.7)']), type: 'bubble' });
+      }
+      if (Math.random() < dt * 2.4) { p.sx = 1.12; p.sy = 0.9; }
+      if (Math.random() < dt * 1.6) { spawn({ x: p.x + rand(-20, 20), y: p.y - R * 0.4, vx: rand(-10, 10), vy: rand(-60, -20), size: rand(5, 8), max: 0.8, color: 'rgba(255,255,255,.7)', type: 'sparkle' }); }
+      if (p.stateT <= 0) {
+        setState('idle', 0);
+        p.fun = clamp(p.fun + 8, 0, 100);
+        burstHearts(5);
+        showToast('🫧 ¡' + p.name + ' quedó impoluta! Brilla. Y huele a… mascota limpia.');
+        AudioSys.wakeS();
+      }
+      break;
+    }
     case 'sleep': {
       if (Math.random() < dt * 1.6) spawnZzz(1);
       break;
@@ -2442,6 +2532,7 @@ function update(dt) {
       else if (r < 0.42) { p.vy = -270; } // hop
       else if (r < 0.55 && p.fun < 40) showBubble(pick(['estoy aburrida…', '¿jugamos?', 'mira… una mosca']));
       else if (r < 0.68) showBubble(pick(IDLE_LINES));
+      else if (r < 0.76 && persona) showBubble(pick(persona.say));
       else if (r < 0.84 && p.energy < 45 && p.state === 'idle') setState('sit', rand(2.5, 5));
     }
   }
@@ -2516,12 +2607,16 @@ const SCENE_META = {
   playa: Object.assign({}, PLACE_INFO.playa, { welcome: '🏖️ En la Playa. La marea trae secretos. El cangrejo también.' }),
 };
 function gameBusy() { return bubbleGame.on || memoGame.on || shopOpen.v || (typeof arcadeActive === 'function' && arcadeActive()); }
-function petBusy() { return pet.state === 'sleep' || pet.state === 'faint' || pet.state === 'eat'; }
+function petBusy() { return pet.state === 'sleep' || pet.state === 'faint' || pet.state === 'eat' || pet.state === 'bath'; }
 
 // ---- amigos visitantes ----
 function tryVisitFriend() {
   const p = pet;
   if (petBusy() || gameBusy() || friend.active || !p.name) return;
+  if (clean < 18) {
+    showToast('🫧 ' + pet.name + ' apesta a aventura… hoy no viene nadie. ¡A bañarla!');
+    return;
+  }
   const kinds = ['michi', 'pio'];
   if (gameScene === 'plaza') kinds.push('michi', 'michi', 'pio');
   friend.active = true;
@@ -2899,8 +2994,12 @@ function doFeed() {
   if (p.food > 92 && !wasFaint) {
     showBubble('ya comí mucho 😌'); return;
   }
+  if (p.state === 'bath') { showBubble('estoy en el baño 🛁 ¡privacidad!'); return; }
   if (wasFaint) p.faintSaved = true;
   stats.feed++;
+  pet.love = clamp(pet.love + 2 * personaMod('feed'), 0, 100);
+  pet.fun = clamp(pet.fun + 2 * personaMod('feed'), 0, 100);
+  markCare('feed');
   bowl.active = true; bowl.t = 0;
   bowl.x = clamp(p.x + p.face * 80, 60, W - 60); bowl.y = floorY;
   setState('eat', 3.1);
@@ -2916,6 +3015,9 @@ function doPlay() {
   if (p.state === 'faint') { showBubble('primero… comida…'); return; }
   if (p.energy < 12) { showBubble('estoy agotado… dejame dormir un poco'); return; }
   if (ball.active) { showBubble('¡ya estamos jugando! 🎾'); return; }
+  if (p.state === 'bath') { showBubble('jugá vos un rato, me estoy bañando'); return; }
+  markCare('play');
+  p.fun = clamp(p.fun + 4 * personaMod('play'), 0, 100);
   ball.active = true;
   ball.x = p.x + p.face * 60; ball.y = floorY - 20;
   ball.vx = p.face * rand(120, 200); ball.vy = -rand(260, 340);
@@ -2926,14 +3028,64 @@ function doSleep() {
   const p = pet;
   if (typeof cancelArcade === 'function' && cancelArcade(true)) { /* a dormir se dijo */ }
   if (gameBusy()) return;
+  if (p.state === 'bath') { showBubble('no duermo en el agua. aprendí de un video.'); return; }
   if (p.state === 'caja') { showBubble('dormir en la caja es la única vida que conozco'); setState('sleep', 0); return; }
   if (p.state === 'sleep') { wakeUp(false); return; }
   if (p.energy > 92) { showBubble('no tengo sueño 😌'); return; }
   if (p.state === 'faint') { showBubble('no puedo dormir… me desmayé, es distinto'); return; }
   if (p.state === 'eat') return;
+  markCare('sleep');
   setState('sleep', 0);
   showToast('🌙 Buenas noches, ' + p.name + '. Que sueñes con croquetas gigantes.');
   AudioSys.sleepS();
+}
+function doDance() {
+  const p = pet;
+  if (typeof cancelArcade === 'function' && cancelArcade(true)) { /* la música pudo más */ }
+  if (gameBusy()) { showBubble('ahora no, estoy en otra cosa'); return; }
+  if (p.state === 'sleep') { showBubble('shhh… estoy bailando en mis sueños'); return; }
+  if (p.state === 'faint') { showBubble('primero… comida… después el show'); return; }
+  if (p.state === 'bath') { showBubble('bailar mojado resbala. no, gracias'); return; }
+  if (p.energy < 12) { showBubble('sin energía… ni un pasito'); return; }
+  stats.dance++;
+  if (p.state === 'dance') {
+    p.stateT = Math.max(p.stateT, 2);
+    showBubble('¡otra vez! ¡qué temón!');
+    markCare('dance');
+    AudioSys.eventS();
+    return;
+  }
+  setState('dance', rand(3.6, 5.2));
+  p.fun = clamp(p.fun + 6 * personaMod('dance'), 0, 100);
+  markCare('dance');
+  // si la familia está cerca… ¡fiesta!
+  if (typeof family !== 'undefined' && family.length) {
+    const comp = family.find(c => Math.abs(c.x - p.x) < 330);
+    if (comp) {
+      comp.playT = Math.max(comp.playT || 0, 3.2);
+      if (typeof compHearts === 'function') compHearts(comp, 5);
+      p.fun = clamp(p.fun + 6, 0, 100);
+      showToast('🪩 ¡' + comp.nm + ' se sumó a la fiesta!');
+    }
+  }
+  AudioSys.eventS();
+  save();
+}
+function doBath() {
+  const p = pet;
+  if (typeof cancelArcade === 'function' && cancelArcade(true)) { /* higiene primero */ }
+  if (gameBusy()) { showBubble('un segundito, estoy en algo'); return; }
+  if (p.state === 'sleep') { showBubble('el agua fría me despierta… mejor no'); return; }
+  if (p.state === 'faint') { showBubble('no puedo bañarme desmayada… es complicado'); return; }
+  if (p.state === 'bath') return;
+  if (p.state === 'caja') { showBubble('el baño queda afuera de la caja. no, gracias.'); return; }
+  if (clean > 88) { showBubble('ya estoy limpia… reluciente, incluso'); return; }
+  stats.bath++;
+  clean = 100;
+  markCare('bath');
+  setState('bath', 3.8);
+  AudioSys.wakeS();
+  save();
 }
 function petPet() {
   const p = pet;
@@ -2941,9 +3093,10 @@ function petPet() {
   if (gameBusy()) return;
   if (p.state === 'sleep') { wakeUp(false); return; }
   if (p.state === 'belly') {
-    p.love = clamp(p.love + 25, 0, 100);
+    p.love = clamp(p.love + 25 * personaMod('pet'), 0, 100);
     p.happy = 1;
     stats.pet++;
+    markCare('pet');
     burstHearts(12);
     addCoin(3, p.x, p.y - R * 1.5);
     showToast('🎉 ¡La pancita! Objetivo cumplido. ' + p.name + ' está en el cielo.');
@@ -2952,10 +3105,12 @@ function petPet() {
     return;
   }
   if (p.state === 'faint') { showBubble('…no es cariño lo que necesito. Es comida.'); return; }
+  if (p.state === 'bath') { showBubble('estoy toda espumosa… tocame cuando esté lista'); return; }
   if (p.state === 'caja') { showBubble('acá no se llega. es mi fortaleza.'); return; }
-  p.love = clamp(p.love + 10, 0, 100);
+  p.love = clamp(p.love + 10 * personaMod('pet'), 0, 100);
   stats.pet++;
   p.happy = 1;
+  markCare('pet');
   burstHearts(5);
   AudioSys.pet();
   if (p.love > 96) {
@@ -3044,6 +3199,7 @@ const bars = {
   energy: document.getElementById('bar-energy'),
   fun: document.getElementById('bar-fun'),
   love: document.getElementById('bar-love'),
+  clean: document.getElementById('bar-clean'),
 };
 const barState = {};
 function setBar(key, val) {
@@ -3061,6 +3217,7 @@ function updateHUD() {
   setBar('energy', pet.energy);
   setBar('fun', pet.fun);
   setBar('love', pet.love);
+  setBar('clean', clean);
   const lbl = document.getElementById('sleep-label');
   const want = pet.state === 'sleep' ? 'Despertar' : 'Dormir';
   if (lbl.textContent !== want) lbl.textContent = want;
@@ -3081,7 +3238,7 @@ if (saved) {
   hud.classList.remove('hidden');
   $('btn-menu').classList.remove('hidden');
   $('np-name').textContent = pet.name;
-  $('np-day').textContent = 'día ' + day;
+  refreshNameplate();
   refreshCoinChip();
   updateSceneButtons();
   // welcome back
@@ -3104,6 +3261,8 @@ function showHint(i) {
     '🖐 Tocá a ' + pet.name + ' para darle cariño',
     '🍖 Cuando tenga hambre, dale de comer',
     '🎾 Arrastrala para lanzarla. Rebota. Le encanta.',
+    '💃 Pedile que baile: cada mascota tiene una personalidad y brilla en algo distinto',
+    '🛁 Mirá la gotita del HUD: si baja mucho, tu mascota empieza a oler a aventura',
   ];
   if (i < hints.length) {
     setTimeout(() => { showToast(hints[i]); showHint(i + 1); }, i === 0 ? 5000 : 14000);
@@ -3119,6 +3278,8 @@ function adopt() {
   pet.name = name;
   pet.born = Date.now();
   day = 1;
+  persona = pick(PERS);
+  clean = 100;
   coins = 10; ownedItems = []; outfit.head = null; outfit.face = null; gameScene = 'room';
   save();
   refreshCoinChip();
@@ -3130,11 +3291,12 @@ function adopt() {
   hud.classList.remove('hidden');
   $('btn-menu').classList.remove('hidden');
   $('np-name').textContent = pet.name;
-  $('np-day').textContent = 'día ' + day;
+  refreshNameplate();
   AudioSys.fanfare();
   confettiBurst(W / 2, H * 0.4, 60);
   setTimeout(() => showToast('🐾 ¡' + name + ' llegó a casa!'), 700);
-  setTimeout(() => showHint(0), 4000);
+  setTimeout(() => showToast('🧬 ' + name + ' es ' + persona.name + ' ' + persona.emoji + '. Cada mascota es única: descubrí en qué brilla.'), 2500);
+  setTimeout(() => showHint(0), 6500);
 }
 $('btn-adopt').addEventListener('click', adopt);
 nameInput.addEventListener('keydown', e => { if (e.key === 'Enter') adopt(); });
@@ -3147,6 +3309,8 @@ muteBtn.addEventListener('click', () => {
 });
 $('btn-feed').addEventListener('click', doFeed);
 $('btn-ball').addEventListener('click', doPlay);
+$('btn-dance').addEventListener('click', doDance);
+$('btn-bath').addEventListener('click', doBath);
 $('btn-sleep').addEventListener('click', doSleep);
 $('btn-shop').addEventListener('click', () => shopOpen.v ? closeShop() : openShop());
 document.querySelectorAll('[data-scene]').forEach(b => b.addEventListener('click', () => setScene(b.dataset.scene)));
@@ -3188,7 +3352,7 @@ const btnMenu = $('btn-menu');
 if (btnMenu) btnMenu.addEventListener('click', () => openOverlay('menu'));
 function renderMenuMeta() {
   const meta = document.getElementById('menu-meta');
-  if (meta) meta.textContent = (pet.name || '—') + ' · día ' + day + ' · 🍪 ' + coins;
+  if (meta) meta.textContent = (pet.name || '—') + ' · día ' + day + (persona ? ' · ' + persona.emoji + ' ' + persona.name : '') + ' · 🍪 ' + coins;
   const sub = document.getElementById('mn-new-sub');
   if (sub) sub.textContent = 'Despedite de ' + pet.name + ' y adoptá otra desde el día 1.';
 }
