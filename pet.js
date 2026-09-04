@@ -373,6 +373,7 @@ function load() {
   return false;
 }
 function save() {
+  if (resetFlag) return;
   try {
     localStorage.setItem(SAVE_KEY, JSON.stringify({
       n: pet.name, f: Math.round(pet.food), e: Math.round(pet.energy),
@@ -383,6 +384,7 @@ function save() {
   } catch (e) {}
 }
 let saveT = 5;
+let resetFlag = false;
 
 /* ================= creature drawing ================= */
 function drawEye(x, y) {
@@ -1626,6 +1628,7 @@ if (saved) {
   intro.style.display = 'none';
   nameplate.classList.remove('hidden');
   hud.classList.remove('hidden');
+  $('btn-menu').classList.remove('hidden');
   $('np-name').textContent = pet.name;
   $('np-day').textContent = 'día ' + day;
   refreshCoinChip();
@@ -1674,6 +1677,7 @@ function adopt() {
   setTimeout(() => { intro.style.display = 'none'; }, 560);
   nameplate.classList.remove('hidden');
   hud.classList.remove('hidden');
+  $('btn-menu').classList.remove('hidden');
   $('np-name').textContent = pet.name;
   $('np-day').textContent = 'día ' + day;
   AudioSys.fanfare();
@@ -1723,10 +1727,63 @@ if (btnShare) btnShare.addEventListener('click', async () => {
 document.querySelectorAll('[data-place]').forEach(b => b.addEventListener('click', () => goToPlace(b.dataset.place)));
 document.querySelectorAll('[data-game]').forEach(b => b.addEventListener('click', () => { if (b.dataset.game === 'burbujas') startBubbles(); else startMemo(); }));
 document.querySelectorAll('[data-close]').forEach(b => b.addEventListener('click', () => closeOverlay(b.dataset.close)));
-['shop', 'paseo', 'juegos', 'logros', 'memo'].forEach(id => {
+['shop', 'paseo', 'juegos', 'logros', 'memo', 'menu'].forEach(id => {
   const ov = document.getElementById(id);
   if (ov) ov.addEventListener('click', ev => overlayBackdrop(id, ev));
 });
+
+// ---- menú: nueva mascota / reiniciar ----
+const btnMenu = $('btn-menu');
+if (btnMenu) btnMenu.addEventListener('click', () => openOverlay('menu'));
+function renderMenuMeta() {
+  const meta = document.getElementById('menu-meta');
+  if (meta) meta.textContent = (pet.name || '—') + ' · día ' + day + ' · 🍪 ' + coins;
+  const sub = document.getElementById('mn-new-sub');
+  if (sub) sub.textContent = 'Despedite de ' + pet.name + ' y adoptá otra desde el día 1.';
+}
+// enganchamos renderMenuMeta dentro de openOverlay sin tocarla:
+const _openOverlay = openOverlay;
+openOverlay = function (id) {
+  if (id === 'menu') renderMenuMeta();
+  _openOverlay(id);
+};
+function setupArmed(id, fire) {
+  const b = document.getElementById(id);
+  if (!b) return;
+  const title = b.querySelector('b');
+  const sub = b.querySelector('small');
+  const old = { t: title.textContent, s: sub.textContent };
+  b.addEventListener('click', () => {
+    if (b._armed) {
+      clearTimeout(b._t);
+      b._armed = false; b.classList.remove('armed');
+      title.textContent = old.t; sub.textContent = old.s;
+      fire();
+    } else {
+      b._armed = true; b.classList.add('armed');
+      title.textContent = '¿Seguro? ¡Tocá de nuevo!';
+      sub.textContent = b.id === 'mn-reset' ? 'Se borra TODO: galletas, logros, días y accesorios.' : 'Se pierde todo el progreso actual de ' + pet.name + '.';
+      AudioSys.faintS();
+      b._t = setTimeout(() => {
+        b._armed = false; b.classList.remove('armed');
+        title.textContent = old.t; sub.textContent = old.s;
+      }, 6000);
+    }
+  });
+}
+function resetGame(msg) {
+  resetFlag = true;
+  closeOverlay('menu');
+  try {
+    localStorage.removeItem(SAVE_KEY);
+    localStorage.removeItem('mascotita.v1');
+    localStorage.removeItem('mascotita.hints');
+  } catch (e) {}
+  showToast(msg);
+  setTimeout(() => location.reload(), 1100);
+}
+setupArmed('mn-new', () => resetGame('🐾 ' + pet.name + ' se despidió con un baile final. ¡Adoptá otra!'));
+setupArmed('mn-reset', () => resetGame('🗑️ Todo borrado. Empezamos de cero.'));
 document.querySelectorAll('.pad').forEach((el, i) => el.addEventListener('click', () => padClick(i)));
 
 /* ================= loop ================= */
@@ -1755,5 +1812,5 @@ function frame(now) {
 requestAnimationFrame(frame);
 
 // persist on exit
-window.addEventListener('beforeunload', save);
-document.addEventListener('visibilitychange', () => { if (document.hidden) save(); });
+window.addEventListener('beforeunload', () => { if (!resetFlag) save(); });
+document.addEventListener('visibilitychange', () => { if (document.hidden && !resetFlag) save(); });

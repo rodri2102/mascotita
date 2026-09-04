@@ -54,6 +54,8 @@ body{
 .pill-btn:hover{transform:translateY(-1px) scale(1.04);box-shadow:var(--shadow)}
 .pill-btn:active{transform:scale(.92)}
 
+#btn-menu{right:66px}
+
 /* ===== coin chip ===== */
 #coin-chip{
   position:fixed;top:66px;right:14px;z-index:5;
@@ -327,6 +329,39 @@ body{
 .lg-ic{font-size:22px;width:38px;height:38px;flex:none;display:flex;align-items:center;justify-content:center;border-radius:12px;background:rgba(255,255,255,.8)}
 .logro-row .pr{font-size:11.5px}
 .lg-st{font-weight:700;font-size:13px;color:#b8792a}
+
+/* ===== menú (nueva mascota / reiniciar) ===== */
+.menu-btn{
+  width:100%;display:flex;align-items:center;gap:12px;text-align:left;
+  padding:13px 12px;margin-bottom:10px;border-radius:19px;
+  border:1.5px solid rgba(74,44,23,.12);background:rgba(255,255,255,.78);
+  color:var(--ink);cursor:pointer;font-family:inherit;
+  transition:transform .15s ease, box-shadow .2s, border-color .2s, background .25s;
+}
+.menu-btn:hover{transform:translateY(-1px);box-shadow:0 6px 16px rgba(74,44,23,.12)}
+.menu-btn:active{transform:scale(.98)}
+.menu-ic{
+  width:46px;height:46px;flex:none;border-radius:15px;
+  display:flex;align-items:center;justify-content:center;font-size:23px;
+  background:radial-gradient(circle at 30% 25%,#fff6e8,#ffe1bd);
+}
+.menu-tx{flex:1;min-width:0;display:flex;flex-direction:column;gap:3px}
+.menu-tx b{font-size:15.5px;font-weight:600;line-height:1.2}
+.menu-tx small{font-size:12px;color:var(--ink-soft);line-height:1.35}
+.menu-go{font-size:15px;font-weight:700;color:rgba(74,44,23,.35)}
+.menu-btn.danger{border-color:rgba(255,90,90,.35);background:#fff4f4}
+.menu-btn.danger .menu-ic{background:radial-gradient(circle at 30% 25%,#ffecec,#ffd6d6)}
+.menu-btn.danger .menu-go{color:rgba(255,90,90,.65)}
+.menu-btn.armed{
+  border-color:var(--danger);background:#ffecec;
+  animation:menuShake .5s ease;
+  box-shadow:0 0 0 4px rgba(255,90,90,.15);
+}
+.menu-btn.armed .menu-tx b{color:var(--danger)}
+.menu-btn.armed .menu-go{color:var(--danger)}
+.menu-btn.armed:hover{transform:none}
+@keyframes menuShake{0%,100%{transform:translateX(0)}20%{transform:translateX(-6px)}40%{transform:translateX(5px)}60%{transform:translateX(-3px)}80%{transform:translateX(2px)}}
+#menu-meta{max-width:150px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 
 /* ===== gamebar (minijuegos) ===== */
 #gamebar{

@@ -33,6 +33,11 @@
   <svg id="ico-off" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" style="display:none"><path fill="currentColor" d="M3 9v6h4l5 5V4L7 9H3zm18.6 3.6l-2.3-2.3-1.4 1.4 2.3 2.3-2.3 2.3 1.4 1.4 2.3-2.3 2.3 2.3 1.4-1.4-2.3-2.3 2.3-2.3-1.4-1.4-2.3 2.3z"/></svg>
 </button>
 
+<!-- Menú -->
+<button id="btn-menu" class="pill-btn hidden" title="Menú: nueva mascota o reiniciar">
+  <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+</button>
+
 <!-- Toast -->
 <div id="toast"></div>
 
@@ -160,6 +165,28 @@
     </div>
     <div id="logros-list"></div>
     <small class="tip">Cada logro nuevo da 🍪. ¡A coleccionarlos!</small>
+  </div>
+</div>
+
+<!-- Menú -->
+<div id="menu" class="overlay">
+  <div class="panel">
+    <div class="shop-head">
+      <h2>⚙️ Menú</h2>
+      <div class="shop-coins" id="menu-meta">—</div>
+      <button data-close="menu" class="x" title="Cerrar">✕</button>
+    </div>
+    <button id="mn-new" class="menu-btn">
+      <span class="menu-ic">🐾</span>
+      <span class="menu-tx"><b>Adoptar otra mascota</b><small id="mn-new-sub">Despedite de tu mascota y empezá con una nueva desde el día 1.</small></span>
+      <span class="menu-go">➜</span>
+    </button>
+    <button id="mn-reset" class="menu-btn danger">
+      <span class="menu-ic">🗑️</span>
+      <span class="menu-tx"><b>Reiniciar todo</b><small>Borra la partida entera y volvé a empezar de cero.</small></span>
+      <span class="menu-go">➜</span>
+    </button>
+    <small class="tip">Primero tocá y después confirmá (así no perdés nada por accidente). El progreso se guarda solo en este dispositivo.</small>
   </div>
 </div>
 

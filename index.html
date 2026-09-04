@@ -66,6 +66,8 @@ body{
 .pill-btn:hover{transform:translateY(-1px) scale(1.04);box-shadow:var(--shadow)}
 .pill-btn:active{transform:scale(.92)}
 
+#btn-menu{right:66px}
+
 /* ===== coin chip ===== */
 #coin-chip{
   position:fixed;top:66px;right:14px;z-index:5;
@@ -340,6 +342,39 @@ body{
 .logro-row .pr{font-size:11.5px}
 .lg-st{font-weight:700;font-size:13px;color:#b8792a}
 
+/* ===== menú (nueva mascota / reiniciar) ===== */
+.menu-btn{
+  width:100%;display:flex;align-items:center;gap:12px;text-align:left;
+  padding:13px 12px;margin-bottom:10px;border-radius:19px;
+  border:1.5px solid rgba(74,44,23,.12);background:rgba(255,255,255,.78);
+  color:var(--ink);cursor:pointer;font-family:inherit;
+  transition:transform .15s ease, box-shadow .2s, border-color .2s, background .25s;
+}
+.menu-btn:hover{transform:translateY(-1px);box-shadow:0 6px 16px rgba(74,44,23,.12)}
+.menu-btn:active{transform:scale(.98)}
+.menu-ic{
+  width:46px;height:46px;flex:none;border-radius:15px;
+  display:flex;align-items:center;justify-content:center;font-size:23px;
+  background:radial-gradient(circle at 30% 25%,#fff6e8,#ffe1bd);
+}
+.menu-tx{flex:1;min-width:0;display:flex;flex-direction:column;gap:3px}
+.menu-tx b{font-size:15.5px;font-weight:600;line-height:1.2}
+.menu-tx small{font-size:12px;color:var(--ink-soft);line-height:1.35}
+.menu-go{font-size:15px;font-weight:700;color:rgba(74,44,23,.35)}
+.menu-btn.danger{border-color:rgba(255,90,90,.35);background:#fff4f4}
+.menu-btn.danger .menu-ic{background:radial-gradient(circle at 30% 25%,#ffecec,#ffd6d6)}
+.menu-btn.danger .menu-go{color:rgba(255,90,90,.65)}
+.menu-btn.armed{
+  border-color:var(--danger);background:#ffecec;
+  animation:menuShake .5s ease;
+  box-shadow:0 0 0 4px rgba(255,90,90,.15);
+}
+.menu-btn.armed .menu-tx b{color:var(--danger)}
+.menu-btn.armed .menu-go{color:var(--danger)}
+.menu-btn.armed:hover{transform:none}
+@keyframes menuShake{0%,100%{transform:translateX(0)}20%{transform:translateX(-6px)}40%{transform:translateX(5px)}60%{transform:translateX(-3px)}80%{transform:translateX(2px)}}
+#menu-meta{max-width:150px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
 /* ===== gamebar (minijuegos) ===== */
 #gamebar{
   position:fixed;top:10px;left:50%;transform:translateX(-50%) translateY(-8px);
@@ -396,6 +431,11 @@ body{
 <button id="btn-mute" class="pill-btn" title="Sonido">
   <svg id="ico-on" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path fill="currentColor" d="M3 9v6h4l5 5V4L7 9H3zm13.5 3A4.5 4.5 0 0 0 14 8v8a4.5 4.5 0 0 0 2.5-4z"/></svg>
   <svg id="ico-off" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" style="display:none"><path fill="currentColor" d="M3 9v6h4l5 5V4L7 9H3zm18.6 3.6l-2.3-2.3-1.4 1.4 2.3 2.3-2.3 2.3 1.4 1.4 2.3-2.3 2.3 2.3 1.4-1.4-2.3-2.3 2.3-2.3-1.4-1.4-2.3 2.3z"/></svg>
+</button>
+
+<!-- Menú -->
+<button id="btn-menu" class="pill-btn hidden" title="Menú: nueva mascota o reiniciar">
+  <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
 </button>
 
 <!-- Toast -->
@@ -525,6 +565,28 @@ body{
     </div>
     <div id="logros-list"></div>
     <small class="tip">Cada logro nuevo da 🍪. ¡A coleccionarlos!</small>
+  </div>
+</div>
+
+<!-- Menú -->
+<div id="menu" class="overlay">
+  <div class="panel">
+    <div class="shop-head">
+      <h2>⚙️ Menú</h2>
+      <div class="shop-coins" id="menu-meta">—</div>
+      <button data-close="menu" class="x" title="Cerrar">✕</button>
+    </div>
+    <button id="mn-new" class="menu-btn">
+      <span class="menu-ic">🐾</span>
+      <span class="menu-tx"><b>Adoptar otra mascota</b><small id="mn-new-sub">Despedite de tu mascota y empezá con una nueva desde el día 1.</small></span>
+      <span class="menu-go">➜</span>
+    </button>
+    <button id="mn-reset" class="menu-btn danger">
+      <span class="menu-ic">🗑️</span>
+      <span class="menu-tx"><b>Reiniciar todo</b><small>Borra la partida entera y volvé a empezar de cero.</small></span>
+      <span class="menu-go">➜</span>
+    </button>
+    <small class="tip">Primero tocá y después confirmá (así no perdés nada por accidente). El progreso se guarda solo en este dispositivo.</small>
   </div>
 </div>
 
@@ -1680,6 +1742,7 @@ function load() {
   return false;
 }
 function save() {
+  if (resetFlag) return;
   try {
     localStorage.setItem(SAVE_KEY, JSON.stringify({
       n: pet.name, f: Math.round(pet.food), e: Math.round(pet.energy),
@@ -1690,6 +1753,7 @@ function save() {
   } catch (e) {}
 }
 let saveT = 5;
+let resetFlag = false;
 
 /* ================= creature drawing ================= */
 function drawEye(x, y) {
@@ -2933,6 +2997,7 @@ if (saved) {
   intro.style.display = 'none';
   nameplate.classList.remove('hidden');
   hud.classList.remove('hidden');
+  $('btn-menu').classList.remove('hidden');
   $('np-name').textContent = pet.name;
   $('np-day').textContent = 'día ' + day;
   refreshCoinChip();
@@ -2981,6 +3046,7 @@ function adopt() {
   setTimeout(() => { intro.style.display = 'none'; }, 560);
   nameplate.classList.remove('hidden');
   hud.classList.remove('hidden');
+  $('btn-menu').classList.remove('hidden');
   $('np-name').textContent = pet.name;
   $('np-day').textContent = 'día ' + day;
   AudioSys.fanfare();
@@ -3030,10 +3096,63 @@ if (btnShare) btnShare.addEventListener('click', async () => {
 document.querySelectorAll('[data-place]').forEach(b => b.addEventListener('click', () => goToPlace(b.dataset.place)));
 document.querySelectorAll('[data-game]').forEach(b => b.addEventListener('click', () => { if (b.dataset.game === 'burbujas') startBubbles(); else startMemo(); }));
 document.querySelectorAll('[data-close]').forEach(b => b.addEventListener('click', () => closeOverlay(b.dataset.close)));
-['shop', 'paseo', 'juegos', 'logros', 'memo'].forEach(id => {
+['shop', 'paseo', 'juegos', 'logros', 'memo', 'menu'].forEach(id => {
   const ov = document.getElementById(id);
   if (ov) ov.addEventListener('click', ev => overlayBackdrop(id, ev));
 });
+
+// ---- menú: nueva mascota / reiniciar ----
+const btnMenu = $('btn-menu');
+if (btnMenu) btnMenu.addEventListener('click', () => openOverlay('menu'));
+function renderMenuMeta() {
+  const meta = document.getElementById('menu-meta');
+  if (meta) meta.textContent = (pet.name || '—') + ' · día ' + day + ' · 🍪 ' + coins;
+  const sub = document.getElementById('mn-new-sub');
+  if (sub) sub.textContent = 'Despedite de ' + pet.name + ' y adoptá otra desde el día 1.';
+}
+// enganchamos renderMenuMeta dentro de openOverlay sin tocarla:
+const _openOverlay = openOverlay;
+openOverlay = function (id) {
+  if (id === 'menu') renderMenuMeta();
+  _openOverlay(id);
+};
+function setupArmed(id, fire) {
+  const b = document.getElementById(id);
+  if (!b) return;
+  const title = b.querySelector('b');
+  const sub = b.querySelector('small');
+  const old = { t: title.textContent, s: sub.textContent };
+  b.addEventListener('click', () => {
+    if (b._armed) {
+      clearTimeout(b._t);
+      b._armed = false; b.classList.remove('armed');
+      title.textContent = old.t; sub.textContent = old.s;
+      fire();
+    } else {
+      b._armed = true; b.classList.add('armed');
+      title.textContent = '¿Seguro? ¡Tocá de nuevo!';
+      sub.textContent = b.id === 'mn-reset' ? 'Se borra TODO: galletas, logros, días y accesorios.' : 'Se pierde todo el progreso actual de ' + pet.name + '.';
+      AudioSys.faintS();
+      b._t = setTimeout(() => {
+        b._armed = false; b.classList.remove('armed');
+        title.textContent = old.t; sub.textContent = old.s;
+      }, 6000);
+    }
+  });
+}
+function resetGame(msg) {
+  resetFlag = true;
+  closeOverlay('menu');
+  try {
+    localStorage.removeItem(SAVE_KEY);
+    localStorage.removeItem('mascotita.v1');
+    localStorage.removeItem('mascotita.hints');
+  } catch (e) {}
+  showToast(msg);
+  setTimeout(() => location.reload(), 1100);
+}
+setupArmed('mn-new', () => resetGame('🐾 ' + pet.name + ' se despidió con un baile final. ¡Adoptá otra!'));
+setupArmed('mn-reset', () => resetGame('🗑️ Todo borrado. Empezamos de cero.'));
 document.querySelectorAll('.pad').forEach((el, i) => el.addEventListener('click', () => padClick(i)));
 
 /* ================= loop ================= */
@@ -3062,7 +3181,7 @@ function frame(now) {
 requestAnimationFrame(frame);
 
 // persist on exit
-window.addEventListener('beforeunload', save);
-document.addEventListener('visibilitychange', () => { if (document.hidden) save(); });</script>
+window.addEventListener('beforeunload', () => { if (!resetFlag) save(); });
+document.addEventListener('visibilitychange', () => { if (document.hidden && !resetFlag) save(); });</script>
 </body>
 </html>
