@@ -21,10 +21,12 @@ let html = fs.readFileSync(path.join(dir, 'index.src.html'), 'utf8');
 const css = fs.readFileSync(path.join(dir, 'styles.css'), 'utf8');
 const core = fs.readFileSync(path.join(dir, 'core.js'), 'utf8');
 const pet = fs.readFileSync(path.join(dir, 'pet.js'), 'utf8');
+const fam = fs.readFileSync(path.join(dir, 'family.js'), 'utf8');
 
 html = html.replace('<link rel="stylesheet" href="styles.css">', '<style>' + css + '</style>');
 html = html.replace('<script src="sfx.js"></script>', '<script>' + sfxJs + '</script>');
 html = html.replace('<script src="core.js"></script>', '<script>' + core + '</script>');
 html = html.replace('<script src="pet.js"></script>', '<script>' + pet + '</script>');
+html = html.replace('<script src="family.js"></script>', '<script>' + fam + '</script>');
 fs.writeFileSync(path.join(dir, 'index.html'), html);
 console.log('built mascota/index.html (' + (html.length / 1024).toFixed(0) + ' KB)');

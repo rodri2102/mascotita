@@ -23,11 +23,13 @@ Una web autocontenida (un solo `index.html` con todo embebido) — sin servidore
 - Ganás **🍪 galletas**: atrapando la pelota, acariciando, en eventos, minijuegos y por la pancita
 - **🛍️ Tienda**: accesorios (corona 👑, gorrito 🎉, sombrero 👒, lentes 🕶️, moño 🎀, gorro 🧶, antena 📡, bigote 👨🏻) — se equipan y quedan guardados
 - **🐾 Paseo**: salí a lugares increíbles — **La Plaza** 🏛️, **El Bosque** 🌲 y **La Playa** 🏖️ — cada uno con su clima, decorado y sorpresas
-- **🕹️ Minijuegos**: **Burbujas** 🫧 (explotá burbujas contrarreloj) y **Memorión** 🎵 (repetí la secuencia de notas); ambos dan 🍪 y suben el ánimo
+- **💞 Familia (SIMS de animales)**: adoptá hasta **2 hermanos** (Perrito 🐶, Gatito 🐱, Conejín 🐰, Patito 🦆, Dino 🦖) y una **pareja** 💘 para tu mascota. Viven en la escena, pasean, duermen en ronda con ella, se pueden tocar (reaccionan con corazones 🥰), juegan juntos (hermanos) y tienen momentos románticos (la pareja da amor extra). Cada miembro puede despedirse con la ✕ (doble toque de confirmación).
+- **🕹️ Minijuegos**: **Burbujas** 🫧, **Memorión** 🎵, **Topos** 🐹 (¡hay uno dorado que vale ×3!) y **Peces voladores** 🐟 (cuidado con la zapatilla del vecino); todos dan 🍪 y suben el ánimo
 - **🐱 Amigos**: Michi la gata y Pío el pájaro vienen a jugar de visita (en la Plaza llegan más seguido)
-- **🏆 Logros**: 10 logros con recompensas (atrapadas, caricias, visitas, rachas, exploración…)
+- **🏆 Logros**: 14 logros con recompensas (atrapadas, caricias, visitas, rachas, exploración, familia, topos y pesca…)
 - **Crecimiento**: tu mascota es bebé 🍼, joven ✨ y grande 🌟 con los días, y volver cada día suma racha 🔥
 - **Escenas**: **Sala** 🏠 y **Jardín** 🌳, de día y de noche (sol, luna, estrellas, nubes)
+- **Acciones siempre responden**: si tu mascota está en medio de una payasada (bailando, en la caja, juzgándote…) y le pedís que camine, coma, juegue o duerma, interrumpe con gracia — nunca más se queda "en algo" sin poder hacer nada. Los minijuegos de escena se cortan solos si querés cuidar a tu mascota.
 
 ## Cosas que pueden pasar
 
@@ -62,7 +64,8 @@ Regla de oro: siempre verificar la licencia de **cada** archivo antes de publica
 | `index.src.html` | Estructura HTML fuente |
 | `styles.css` | Estilos (HUD, intro, tienda, glassmorphism) |
 | `core.js` | Motor: canvas, audio, partículas, escenas día/noche |
-| `pet.js` | La criatura: estados, eventos, física, economía, tienda |
+| `pet.js` | La criatura: estados, eventos, física, economía, tienda, logros |
+| `family.js` | Familia (hermanos y pareja) + minijuegos Topos y Peces |
 | `assets/sfx/*.wav` | Efectos CC0 (Kenney UI audio) |
 | `build.js` | Une los fuentes + embebe los WAV en un solo `index.html` (`node build.js`) |
 

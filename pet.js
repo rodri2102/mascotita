@@ -48,7 +48,7 @@ const PLACE_INFO = {
 };
 
 // contadores de logros (persistidos)
-const stats = { feed: 0, catch: 0, pet: 0, events: 0, friends: 0, games: 0, bestBub: 0, bestMemo: 0, coinsEarned: 0 };
+const stats = { feed: 0, catch: 0, pet: 0, events: 0, friends: 0, games: 0, bestBub: 0, bestMemo: 0, coinsEarned: 0, bestMole: 0, bestFish: 0 };
 let unlockedLogros = [];
 let visitedScenes = ['room'];
 let streak = 0, lastDaySeen = 0;
@@ -64,6 +64,10 @@ const LOGROS = [
   { id: 'l8', icon: '🔥', name: 'Racha', desc: 'Volvé 3 días seguidos', cond: () => streak >= 3, rew: 10 },
   { id: 'l9', icon: '🫧', name: 'Burbuja maestra', desc: '15 burbujas en un juego', cond: () => stats.bestBub >= 15, rew: 7 },
   { id: 'l10', icon: '🎵', name: 'Memoria de oro', desc: '6 rondas en Memorión', cond: () => stats.bestMemo >= 6, rew: 9 },
+  { id: 'l11', icon: '🏡', name: 'Hogar lleno', desc: 'Adoptá un hermano', cond: () => typeof family !== 'undefined' && family.some(c => c.role === 'hermano'), rew: 10 },
+  { id: 'l12', icon: '💘', name: 'Corazón compartido', desc: 'Adoptá una pareja para tu mascota', cond: () => typeof family !== 'undefined' && family.some(c => c.role === 'pareja'), rew: 12 },
+  { id: 'l13', icon: '🐹', name: 'Cazadora de topos', desc: '8 topos en una partida', cond: () => stats.bestMole >= 8, rew: 7 },
+  { id: 'l14', icon: '🐟', name: 'Pesca celestial', desc: '8 peces en una partida', cond: () => stats.bestFish >= 8, rew: 7 },
 ];
 
 // amigo visitante
@@ -158,6 +162,9 @@ function dustPuff(x, y, n) {
   }
 }
 function squash(sx, sy) { pet.sx = sx; pet.sy = sy; }
+
+// estados "payasada" que se pueden interrumpir con un clic en el piso
+const CANCEL_CLICK = new Set(['zoomies', 'judge', 'sneeze', 'dance', 'stare', 'belly', 'yawn', 'cola', 'phone', 'selfie', 'happy', 'gift', 'caja', 'plant']);
 
 /* ================= economía / accesorios / escenas ================= */
 function refreshCoinChip() {
@@ -364,6 +371,7 @@ function load() {
       unlockedLogros = Array.isArray(s.unl) ? s.unl.filter(id => LOGROS.some(l => l.id === id)) : [];
       visitedScenes = (Array.isArray(s.vs) && s.vs.length) ? s.vs.filter(v => SCENE_META[v]) : ['room'];
       if (s.stt) { for (const k in s.stt) { if (k in stats && typeof s.stt[k] === 'number') stats[k] = s.stt[k]; } }
+      window.__fam = Array.isArray(s.fm) ? s.fm.filter(m => m && typeof m === 'object' && typeof m.sp === 'string' && (m.role === 'hermano' || m.role === 'pareja')) : [];
       stageNotified = stageName();
       gameScene = HOME_SCENES.includes(s.sc) ? s.sc : 'room';
       if (s._mig) save();
@@ -379,7 +387,8 @@ function save() {
       n: pet.name, f: Math.round(pet.food), e: Math.round(pet.energy),
       u: Math.round(pet.fun), l: Math.round(pet.love), born: pet.born, ts: Date.now(),
       c: coins, ow: ownedItems, hd: outfit.head, fc: outfit.face, sc: gameScene,
-      str: streak, lst: lastDaySeen, stt: stats, unl: unlockedLogros, vs: visitedScenes
+      str: streak, lst: lastDaySeen, stt: stats, unl: unlockedLogros, vs: visitedScenes,
+      fm: Array.isArray(window.__fam) ? window.__fam : []
     }));
   } catch (e) {}
 }
@@ -1018,6 +1027,8 @@ function update(dt) {
   saveT -= dt;
   if (saveT <= 0) { saveT = 5; save(); refreshDayCycle(); }
 
+  if (typeof extraTick === 'function') extraTick(dt);
+
   updateHUD();
 }
 function spawnZzz(n) {
@@ -1081,7 +1092,7 @@ const SCENE_META = {
   bosque: Object.assign({}, PLACE_INFO.bosque, { welcome: '🌲 En el Bosque. Hay un búho que te mira. No te asustes.' }),
   playa: Object.assign({}, PLACE_INFO.playa, { welcome: '🏖️ En la Playa. La marea trae secretos. El cangrejo también.' }),
 };
-function gameBusy() { return bubbleGame.on || memoGame.on || shopOpen.v; }
+function gameBusy() { return bubbleGame.on || memoGame.on || shopOpen.v || (typeof arcadeActive === 'function' && arcadeActive()); }
 function petBusy() { return pet.state === 'sleep' || pet.state === 'faint' || pet.state === 'eat'; }
 
 // ---- amigos visitantes ----
@@ -1221,6 +1232,7 @@ function drawCajaBox() {
 
 // ---- minijuego: burbujas ----
 function startBubbles() {
+  if (typeof cancelArcade === 'function') cancelArcade(true);
   closeOverlay('juegos');
   bubbleGame.on = true; bubbleGame.t = 20; bubbleGame.score = 0; bubbleGame.spawnT = 0; bubbleGame.arr = [];
   stats.games++;
@@ -1321,6 +1333,7 @@ function memoStepSeq(repeatRound) {
   setTimeout(step, 650);
 }
 function startMemo() {
+  if (typeof cancelArcade === 'function') cancelArcade(true);
   closeOverlay('juegos');
   memoGame.on = true;
   memoGame.seq = [];
@@ -1455,6 +1468,7 @@ function overlayBackdrop(id, ev) {
 /* ================= actions ================= */
 function doFeed() {
   const p = pet;
+  if (typeof cancelArcade === 'function' && cancelArcade(true)) { /* la partida se cortó sola: el hambre manda */ }
   if (gameBusy()) { showBubble('un segundito, estoy en algo'); return; }
   if (p.state === 'caja') { showBubble('estoy en mi caja. no se come en la caja.'); return; }
   if (p.state === 'sleep') { showBubble('ahora no… estoy soñando con croquetas'); return; }
@@ -1473,11 +1487,12 @@ function doFeed() {
 }
 function doPlay() {
   const p = pet;
+  if (typeof cancelArcade === 'function' && cancelArcade(true)) { /* se cambió de juego sobre la marcha */ }
   if (gameBusy()) { showBubble('ahora no, estoy en otra cosa'); return; }
   if (p.state === 'sleep') { showBubble('zzz… mañana jugamos'); return; }
   if (p.state === 'faint') { showBubble('primero… comida…'); return; }
   if (p.energy < 12) { showBubble('estoy agotado… dejame dormir un poco'); return; }
-  if (ball.active) return;
+  if (ball.active) { showBubble('¡ya estamos jugando! 🎾'); return; }
   ball.active = true;
   ball.x = p.x + p.face * 60; ball.y = floorY - 20;
   ball.vx = p.face * rand(120, 200); ball.vy = -rand(260, 340);
@@ -1486,6 +1501,7 @@ function doPlay() {
 }
 function doSleep() {
   const p = pet;
+  if (typeof cancelArcade === 'function' && cancelArcade(true)) { /* a dormir se dijo */ }
   if (gameBusy()) return;
   if (p.state === 'caja') { showBubble('dormir en la caja es la única vida que conozco'); setState('sleep', 0); return; }
   if (p.state === 'sleep') { wakeUp(false); return; }
@@ -1498,6 +1514,7 @@ function doSleep() {
 }
 function petPet() {
   const p = pet;
+  if (typeof cancelArcade === 'function' && cancelArcade(true)) { /* cariño interrumpe todo */ }
   if (gameBusy()) return;
   if (p.state === 'sleep') { wakeUp(false); return; }
   if (p.state === 'belly') {
@@ -1529,6 +1546,7 @@ function petPet() {
 let drag = null;
 canvas.addEventListener('pointerdown', e => {
   AudioSys.ensure();
+  if (typeof extraPointerDown === 'function' && extraPointerDown(e)) return;
   if (bubbleGame.on) { popBubbleAt(e.clientX, e.clientY); return; }
   if (memoGame.on || shopOpen.v) return;
   if (canvas.setPointerCapture) { try { canvas.setPointerCapture(e.pointerId); } catch (err) {} }
@@ -1543,8 +1561,18 @@ canvas.addEventListener('pointerdown', e => {
     return;
   }
   drag = null;
-  // click floor → walk there
-  if ((pet.state === 'idle' || pet.state === 'walk' || pet.state === 'sit') && pet.state !== 'faint') {
+  // click floor → walk there (interrumpe las payasadas con gracia)
+  const wasAntic = CANCEL_CLICK.has(pet.state);
+  const wasCaja = pet.state === 'caja';
+  const walkable = pet.state === 'idle' || pet.state === 'walk' || pet.state === 'sit' || wasAntic;
+  if (walkable && pet.state !== 'faint' && pet.state !== 'sleep' && pet.state !== 'eat') {
+    if (wasAntic) {
+      pet.offX = 0; pet.tilt = 0;
+      gift.active = false; pet._giftPending = false;
+      setState('idle', 0);
+      if (!wasCaja) showBubble(pick(['bueno, bueno… ¡me muevo!', 'actividad cancelada. prioridades.', '¡qué autoridad que tenés!']));
+      else showBubble('salgo de la caja, pero bajo protesta');
+    }
     pet.target = { x: clamp(x, R, W - R), y: floorY - R };
     setState('walk', 0);
     AudioSys.pop();
@@ -1807,6 +1835,7 @@ function frame(now) {
   drawBubbleGame();
   drawParticles();
   drawBubbles();
+  if (typeof extraDraw === 'function') extraDraw();
   requestAnimationFrame(frame);
 }
 requestAnimationFrame(frame);

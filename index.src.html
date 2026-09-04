@@ -81,6 +81,7 @@
     <button id="btn-games" class="minibtn" title="Minijuegos">🕹️ Juegos</button>
     <button id="btn-logros" class="minibtn" title="Logros">🏆 Logros</button>
     <button id="btn-share" class="minibtn" title="Compartir Mascotita con amigos">📤 Compartir</button>
+    <button id="btn-familia" class="minibtn fam" title="Adoptá hermanos y pareja">💞 Familia</button>
     <button data-scene="room" class="scenebtn on" title="Sala">🏠 Sala</button>
     <button data-scene="garden" class="scenebtn" title="Jardín">🌳 Jardín</button>
   </div>
@@ -151,7 +152,9 @@
     </div>
     <button class="place-card" data-game="burbujas"><span class="pc-ic">🫧</span><span class="pc-tx"><b>Burbujas</b><small>Explotá burbujas antes de que escapen. 20 segundos de caos zen.</small></span><span class="pc-go">Jugar ➜</span></button>
     <button class="place-card" data-game="memo"><span class="pc-ic">🎵</span><span class="pc-tx"><b>Memorión</b><small>Repetí la secuencia de notas que tu mascota te marca.</small></span><span class="pc-go">Jugar ➜</span></button>
-    <small class="tip">Cada partida suma 🍪 y sube el ánimo de tu mascota.</small>
+    <button class="place-card" data-game2="mole"><span class="pc-ic">🐹</span><span class="pc-tx"><b>Topos</b><small>Unos topos invadieron el piso. Dales un toque (suavecito) antes de que se escondan. ¡Hay uno dorado!</small></span><span class="pc-go">Jugar ➜</span></button>
+    <button class="place-card" data-game2="fish"><span class="pc-ic">🐟</span><span class="pc-tx"><b>Peces voladores</b><small>Peces mágicos vuelan por el aire. Atrapalos… pero ojo, que el vecino también tira zapatillas.</small></span><span class="pc-go">Jugar ➜</span></button>
+    <small class="tip">Cada partida suma 🍪 y sube el ánimo de tu mascota. ¿Récord? Mirá tus logros 🏆.</small>
   </div>
 </div>
 
@@ -160,7 +163,7 @@
   <div class="panel">
     <div class="shop-head">
       <h2>🏆 Logros</h2>
-      <div class="shop-coins" id="logros-count">0/10</div>
+      <div class="shop-coins" id="logros-count">0/14</div>
       <button data-close="logros" class="x" title="Cerrar">✕</button>
     </div>
     <div id="logros-list"></div>
@@ -190,6 +193,21 @@
   </div>
 </div>
 
+<!-- Familia -->
+<div id="familia" class="overlay">
+  <div class="panel">
+    <div class="shop-head">
+      <h2>💞 La familia</h2>
+      <div class="shop-coins" id="fam-balance">🍪 0</div>
+      <button data-close="familia" class="x" title="Cerrar">✕</button>
+    </div>
+    <div id="fam-list"></div>
+    <div class="fam-sep">+ Adoptar</div>
+    <div id="fam-adopt"></div>
+    <small class="tip">Hasta 2 hermanos + 1 pareja. Tu mascota juega con ellos y… sí, la pareja da amor extra 💘. Ganá 🍪 en los minijuegos para ampliar la familia.</small>
+  </div>
+</div>
+
 <!-- Memorión -->
 <div id="memo" class="overlay">
   <div class="panel memo-panel">
@@ -211,5 +229,6 @@
 <script src="sfx.js"></script>
 <script src="core.js"></script>
 <script src="pet.js"></script>
+<script src="family.js"></script>
 </body>
 </html>
